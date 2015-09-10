@@ -4,7 +4,9 @@
   "description": "Config Manager that let you use different sources for same parameters, as well as prioritizing those sources",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "mocha": "node_modules/mocha/bin/mocha test/**/*.js",
+    "lint": "jshint lib/**/*.js test/**/*.js && jscs lib/**/*.js test/**/*.js",
+    "test": "npm run lint && npm run mocha"
   },
   "keywords": [
     "configuration",
@@ -23,6 +25,7 @@
     "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.2",
     "sinon": "^1.16.1",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "underscore": "^1.8.3"
   }
 }

@@ -4,7 +4,6 @@
 	"bitwise"					:	true,
 	"curly"						:	true,
 	"eqeqeq"					:	true,
-	"es5"							:	true,
 	"freeze"					:	true,
 	"funcscope"				:	false,
 	"futurehostile"		:	false,

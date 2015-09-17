@@ -4,8 +4,8 @@
   "description": "Config Manager that let you use different sources for same parameters, as well as prioritizing those sources",
   "main": "index.js",
   "scripts": {
-    "mocha": "node_modules/mocha/bin/mocha test/**/*.js",
-    "lint": "jshint lib/**/*.js test/**/*.js && jscs lib/**/*.js test/**/*.js",
+    "mocha": "./mocha.sh",
+    "lint": "node_modules/jshint/bin/jshint lib test && node_modules/jscs/bin/jscs -c test/.jscsrc test && node_modules/jscs/bin/jscs -c .jscsrc lib",
     "test": "npm run lint && npm run mocha"
   },
   "keywords": [
@@ -23,9 +23,16 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
+    "jscs": "^2.1.1",
+    "jshint": "^2.8.0",
     "mocha": "^2.3.2",
     "sinon": "^1.16.1",
-    "sinon-chai": "^2.8.0",
-    "underscore": "^1.8.3"
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "async": "^1.4.2",
+    "properties-parser": "^0.3.0",
+    "xml2js": "^0.4.12"
   }
 }

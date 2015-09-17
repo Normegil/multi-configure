@@ -1,5 +1,7 @@
 {
-  "extends"                                       :  "../.jscsrc",
-
-  "disallowAnonymousFunctions"                    :  null,
+  "preset": "../.jscsrc",
+  "disallowAnonymousFunctions": false,
+  "requireNamedUnassignedFunctions": false,
+  "requireBlocksOnNewline": false,
+  "maximumLineLength": 200
 }

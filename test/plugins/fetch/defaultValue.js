@@ -7,7 +7,6 @@ var plugin = require('../../../lib/plugins/fetch/defaultValue');
 var pluginName = 'DefaultValues';
 
 describe('Plugin: ' + pluginName, function() {
-
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
     done();
@@ -31,7 +30,7 @@ describe('Plugin: ' + pluginName, function() {
             priority: 0,
           },
         }, function(err, result) {
-          if(err) return done(err);
+          if (err) {return done(err);}
           response = result;
           done();
         });

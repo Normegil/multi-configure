@@ -7,7 +7,6 @@ var parser = require('../../../lib/plugins/parser/json');
 var name = 'json';
 
 describe('Plugin: JSON Parser', function() {
-
   var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
@@ -38,7 +37,7 @@ describe('Plugin: JSON Parser', function() {
       },
     };
     parser.parse(content, function(err, object) {
-      if (err) return done(err);
+      if (err) {return done(err);}
       assert.deepEqual(object, expected);
       done();
     });
@@ -51,5 +50,4 @@ describe('Plugin: JSON Parser', function() {
       done();
     });
   });
-
 });

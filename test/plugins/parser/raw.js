@@ -5,8 +5,7 @@ var parser = require('../../../lib/plugins/parser/raw');
 
 var name = 'raw';
 
-describe('Plugin: '+name.toUpperCase()+' Parser', function() {
-
+describe('Plugin: ' + name.toUpperCase() + ' Parser', function() {
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
     done();
@@ -33,7 +32,7 @@ describe('Plugin: '+name.toUpperCase()+' Parser', function() {
       },
     };
     parser.parse(expected, function(err, object) {
-      if (err) return done(err);
+      if (err) {return done(err);}
       assert.deepEqual(object, expected);
       done();
     });

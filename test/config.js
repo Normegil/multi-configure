@@ -23,12 +23,12 @@ describe('Main', function() {
           sources: [
             {
               type: 'DefaultValues',
-              priority: 5
+              priority: 5,
             },
           ],
         },
         function(err, config) {
-          if (err) done(err);
+          if (err) { return done(err); }
           assert.equal(config.test, 'DefaultTest');
           done();
         });

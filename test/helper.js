@@ -5,7 +5,6 @@ var helper = require('../lib/helper');
 
 describe('Helper', function() {
   describe('.visit()', function() {
-
     var configOptions;
     var config;
     before(function(done) {
@@ -92,14 +91,14 @@ describe('Helper', function() {
     });
 
     it('should be able to get object', function(done) {
-      var object = {test: {test1:1, test2: 'test2'}};
+      var object = {test: {test1: 1, test2: 'test2'}};
       var value = helper.getValue(object, 'test');
       assert.equal(value, object.test);
       done();
     });
 
     it('should be able to get deep value', function(done) {
-      var object = {test: {test1:{ test2: {test3: 'test3'}}}};
+      var object = {test: {test1: {test2: {test3: 'test3'}}}};
       var value = helper.getValue(object, 'test.test1.test2.test3');
       assert.equal(value, object.test.test1.test2.test3);
       done();
@@ -114,25 +113,27 @@ describe('Helper', function() {
 
     it('should be able to get deep value behind array', function(done) {
       var object = {test: [
-        {testX: "test1"},
-        {testX: "test2"}
-      ]};
+        {testX: 'test1',},
+        {testX: 'test2',},
+      ],};
       var value = helper.getValue(object, 'test[1].testX');
       assert.equal(value, object.test[1].testX);
       done();
     });
 
     it('should be able to get deep value behind multiple dimension array', function(done) {
-      var object = {test: [
-        [
-          {testX: "test1"},
-          {testX: "test2"}
+      var object = {
+        test: [
+          [
+            {testX: 'test1',},
+            {testX: 'test2',},
+          ],
+          [
+            {testX: 'test3',},
+            {testX: 'test4',},
+          ],
         ],
-        [
-          {testX: "test3"},
-          {testX: "test4"}
-        ]
-      ]};
+      };
       var value = helper.getValue(object, 'test[1][0].testX');
       assert.equal(value, object.test[1][0].testX);
       done();

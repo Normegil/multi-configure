@@ -63,15 +63,15 @@ describe('Plugin: Objects', function() {
               test: 'test.ObjectValue',
               testNumber: 5,
               object: {
-                  test1: 'object.test1.ObjectValue',
-                  test2: 'object.test2.ObjectValue'
+                test1: 'object.test1.ObjectValue',
+                test2: 'object.test2.ObjectValue',
               },
               array: [5, 6, 7],
             },
-          }
+          },
         },
         function(err, configLoaded) {
-          if(err) return done(err);
+          if (err) {return done(err);}
           response = configLoaded;
           done();
         });
@@ -101,7 +101,7 @@ describe('Plugin: Objects', function() {
     it('should load array', function(done) {
       var array = [5, 6, 7];
       assert.equal(response.config.array.length, array.length);
-      for (var i = 0; i < response.config.array.length; i++) {
+      for (var i = 0;i < response.config.array.length;i++) {
         assert.equal(response.config.array[i], array[i]);
       }
       done();
@@ -122,10 +122,10 @@ describe('Plugin: Objects', function() {
               priority: 0,
               parser: 'JSON',
               object: source,
-            }
+            },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -151,10 +151,10 @@ describe('Plugin: Objects', function() {
               priority: 0,
               parser: 'XML',
               object: source,
-            }
+            },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -180,10 +180,10 @@ describe('Plugin: Objects', function() {
               priority: 0,
               parser: 'Properties',
               object: source,
-            }
+            },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -209,10 +209,10 @@ describe('Plugin: Objects', function() {
               priority: 0,
               parser: 'YAML',
               object: source,
-            }
+            },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -224,5 +224,4 @@ describe('Plugin: Objects', function() {
       });
     });
   });
-
 });

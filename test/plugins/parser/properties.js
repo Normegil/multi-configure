@@ -8,7 +8,6 @@ var format = 'properties';
 var name = 'Properties';
 
 describe('Plugin: Properties Parser', function() {
-
   var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + format, function(done) {
     assert.equal(parser.format, format);
@@ -38,7 +37,7 @@ describe('Plugin: Properties Parser', function() {
       },
     };
     parser.parse(content, function(err, object) {
-      if (err) return done(err);
+      if (err) {return done(err);}
       assert.deepEqual(object, expected);
       done();
     });
@@ -51,5 +50,4 @@ describe('Plugin: Properties Parser', function() {
       done();
     });
   });
-
 });

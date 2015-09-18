@@ -5,7 +5,6 @@ var plugin = require('../../../lib/plugins/fetch/file');
 
 var pluginName = 'File';
 describe('Plugin: ' + pluginName, function() {
-
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
     done();
@@ -60,13 +59,13 @@ describe('Plugin: ' + pluginName, function() {
         {
           config: config,
           source: {
-              type: pluginName,
-              priority: 0,
-              path: resourceFolder + 'config.json',
+            type: pluginName,
+            priority: 0,
+            path: resourceFolder + 'config.json',
           },
         },
         function(err, result) {
-          if(err) return done(err);
+          if (err) {return done(err);}
           response = result;
           done();
         });
@@ -96,7 +95,7 @@ describe('Plugin: ' + pluginName, function() {
     it('should load array', function(done) {
       var array = [3,4,5];
       assert.equal(response.config.array.length, array.length);
-      for (var i = 0; i < response.config.array.length; i++) {
+      for (var i = 0;i < response.config.array.length;i++) {
         assert.equal(response.config.array[i], array[i]);
       }
       done();
@@ -109,15 +108,17 @@ describe('Plugin: ' + pluginName, function() {
           source: {
             type: pluginName,
             path: resourceFolder + 'wrong.unknown',
-          }
+          },
         }, function(err) {
-          if(err) return done();
-          else return done(new Error('Should have failed on loading a wrong config file type'));
+          if (err) {
+            return done();
+          } else {
+            return done(new Error('Should have failed on loading a wrong config file type'));
+          }
         });
     });
 
     describe('- JSON Specific', function() {
-
       var response;
       before(function(done) {
         plugin.load(
@@ -125,13 +126,13 @@ describe('Plugin: ' + pluginName, function() {
           {
             config: config,
             source: {
-                type: pluginName,
-                priority: 0,
-                path: resourceFolder + 'config.json',
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.json',
             },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -150,31 +151,33 @@ describe('Plugin: ' + pluginName, function() {
             source: {
               type: pluginName,
               path: resourceFolder + 'wrong.json',
-            }
+            },
           },
           function(err) {
-            if(err) return done();
-            else return done(new Error('Should have failed on loading a wrong config file'));
+            if (err) {
+              return done();
+            } else {
+              return done(new Error('Should have failed on loading a wrong config file'));
+            }
           });
       });
     });
 
     describe('- XML Specific', function() {
-
       var response;
-        before(function(done) {
+      before(function(done) {
         plugin.load(
           {},
           {
             config: config,
             source: {
-                type: pluginName,
-                priority: 0,
-                path: resourceFolder + 'config.xml',
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.xml',
             },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -193,17 +196,19 @@ describe('Plugin: ' + pluginName, function() {
             source: {
               type: pluginName,
               path: resourceFolder + 'wrong.xml',
-            }
+            },
           },
           function(err) {
-            if(err) return done();
-            else return done(new Error('Should have failed on loading a wrong config file'));
+            if (err) {
+              return done();
+            } else {
+              return done(new Error('Should have failed on loading a wrong config file'));
+            }
           });
       });
     });
 
     describe('- Properties Specific', function() {
-
       var response;
       before(function(done) {
         plugin.load(
@@ -211,13 +216,13 @@ describe('Plugin: ' + pluginName, function() {
           {
             config: config,
             source: {
-                type: pluginName,
-                priority: 0,
-                path: resourceFolder + 'config.properties',
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.properties',
             },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });
@@ -237,13 +242,13 @@ describe('Plugin: ' + pluginName, function() {
           {
             config: config,
             source: {
-                type: pluginName,
-                priority: 0,
-                path: resourceFolder + 'config.yaml',
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.yaml',
             },
           },
           function(err, result) {
-            if(err) return done(err);
+            if (err) {return done(err);}
             response = result;
             done();
           });

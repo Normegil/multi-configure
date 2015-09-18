@@ -7,7 +7,6 @@ var parser = require('../../../lib/plugins/parser/xml');
 var name = 'xml';
 
 describe('Plugin: XML Parser', function() {
-
   var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
@@ -41,7 +40,6 @@ describe('Plugin: XML Parser', function() {
       done();
     });
   });
-  
   it('should not parse wrong xml format', function(done) {
     var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.xml');
     parser.parse(xmlContent, function(err) {
@@ -50,5 +48,4 @@ describe('Plugin: XML Parser', function() {
       done();
     });
   });
-
 });

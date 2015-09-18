@@ -17,19 +17,19 @@ describe('\'merge\' method', function() {
       priority: 10,
       id: '3',
       object: {},
-    }
+    },
   ];
   var config = h.config;
   var results = [
     {
       type: 'DefaultValues',
       sourceID: '1',
-      config:{
+      config: {
         test: 'test.DefaultValue',
         testNumber: 0,
         priorityTest: 'WrongDefaultValue',
         object: {
-            test1: 'object.test1.DefaultValue',
+          test1: 'object.test1.DefaultValue',
         },
         array: [5, 6, 7],
       },
@@ -37,12 +37,12 @@ describe('\'merge\' method', function() {
     {
       plugin: 'Objects',
       sourceID: '3',
-      config:{
+      config: {
         test: 'test.ObjectValue',
         testNumber: 0,
         priorityTest: 'RightDefaultValue',
         object: {
-            test2: 'object.test2.ObjectValue'
+          test2: 'object.test2.ObjectValue',
         },
         array: [5, 6, 7],
       },
@@ -51,7 +51,7 @@ describe('\'merge\' method', function() {
 
   var response;
   before(function(done) {
-     response = merge({
+    response = merge({
       sources: sources,
       config: config,
     }, results);
@@ -82,7 +82,7 @@ describe('\'merge\' method', function() {
   it('does work with arrays as config parameter', function(done) {
     var array = [5, 6, 7];
     assert.equal(response.array.length, array.length);
-    for (var i = 0; i < config.array.length; i++) {
+    for (var i = 0;i < config.array.length;i++) {
       assert.equal(config.array[i], array[i]);
     }
     done();

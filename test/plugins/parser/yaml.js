@@ -7,7 +7,6 @@ var parser = require('../../../lib/plugins/parser/yaml');
 var name = 'yaml';
 
 describe('Plugin: YAML Parser', function() {
-
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
     done();
@@ -36,10 +35,9 @@ describe('Plugin: YAML Parser', function() {
       },
     };
     parser.parse(content, function(err, object) {
-      if (err) return done(err);
+      if (err) {return done(err);}
       assert.deepEqual(object, expected);
       done();
     });
   });
-
 });

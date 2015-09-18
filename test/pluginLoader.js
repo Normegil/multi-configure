@@ -54,7 +54,7 @@ describe('PluginLoader', function() {
     it('should load right type of plugin', function(done) {
       var plugin = {type: 'right'};
       pluginManager.load({definitions: [plugin]}, 'right', function(err, plugins) {
-        if (err) return done(err);
+        if (err) {return done(err);}
         assert.ok(u.contains(plugins, plugin));
         done();
       });
@@ -63,7 +63,7 @@ describe('PluginLoader', function() {
     it('should\'nt load the wrong type of plugin', function(done) {
       var plugin = {type: 'wrong'};
       pluginManager.load({definitions: [plugin]}, 'right', function(err, plugins) {
-        if (err) return done(err);
+        if (err) {return done(err);}
         assert.equal(0, plugins.length);
         done();
       });
@@ -72,7 +72,7 @@ describe('PluginLoader', function() {
     it('should\'nt load objects that are not plugins', function(done) {
       var notAPlugin = {test: 'right'};
       pluginManager.load({definitions: [notAPlugin]}, 'right', function(err, plugins) {
-        if (err) return done(err);
+        if (err) {return done(err);}
         assert.equal(0, plugins.length);
         done();
       });
@@ -81,7 +81,7 @@ describe('PluginLoader', function() {
     it('should load objects & files at the same time', function(done) {
       var plugin = {type: 'right'};
       pluginManager.load({path: pathToPlugins, definitions: [plugin]}, 'right', function(err, plugins) {
-        if (err) return done(err);
+        if (err) {return done(err);}
         assert.ok(u.contains(plugins, filePlugin), 'didn\'t load file plugin');
         assert.ok(u.contains(plugins, plugin), 'Didn\'t load plugin passed by definition');
         done();

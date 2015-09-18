@@ -2,7 +2,7 @@
 	"extends"						:	"../.jshintrc",
 
 	"curly"						:	false,
-
+	"maxstatements"		:	30,
 	"globals" :	{
 		"describe"	:	false,
 		"before"	:	false,

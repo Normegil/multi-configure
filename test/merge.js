@@ -1,110 +1,90 @@
 'use strict';
 
 var assert = require('chai').assert;
+var h = require('./resources/tools/helper');
 var merge = require('../lib/merge');
 
 describe('\'merge\' method', function() {
+  var sources = [
+    {
+      type: 'DefaultValues',
+      priority: 0,
+      id: '1',
+    },
+    {
+      type: 'Objects',
+      parser: 'RAW',
+      priority: 10,
+      id: '3',
+      object: {},
+    }
+  ];
+  var config = h.config;
+  var results = [
+    {
+      type: 'DefaultValues',
+      sourceID: '1',
+      config:{
+        test: 'test.DefaultValue',
+        testNumber: 0,
+        priorityTest: 'WrongDefaultValue',
+        object: {
+            test1: 'object.test1.DefaultValue',
+        },
+        array: [5, 6, 7],
+      },
+    },
+    {
+      plugin: 'Objects',
+      sourceID: '3',
+      config:{
+        test: 'test.ObjectValue',
+        testNumber: 0,
+        priorityTest: 'RightDefaultValue',
+        object: {
+            test2: 'object.test2.ObjectValue'
+        },
+        array: [5, 6, 7],
+      },
+    },
+  ];
 
-  var sources;
-  var referenceConfig;
-  var fakeParsedConfig;
+  var response;
   before(function(done) {
-    sources = {
-      plugins: [
-        {
-          type: 'DefaultValueParser',
-          priority: 30,
-        },
-        {
-          type: 'OtherDefaultValueParser',
-          priority: 50,
-        },
-      ],
-    };
-    referenceConfig = {
-      test: 'Test.DefaultValue',
-      testObject: {
-        testParameter: 'TestObject.TestParameter.DefaultValue',
-      },
-      priorityTest: 'PriorityTest.GoodValue',
-      multipleParameterObject: {
-        test1: 'multipleParameterObject.test1.DefaultValue',
-        test2: 'multipleParameterObject.test2.DefaultValue',
-      },
-      array: ['a', 'b', 'c'],
-      arrayToNotOverride: ['n', 'o', 't', 'o', 'v', 'e' ,'r' ,'r' ,'i' ,'d' ,'e'],
-    };
-    fakeParsedConfig = [
-      {
-        plugin: 'DefaultValueParser',
-        config:{
-          test: referenceConfig.test,
-          testObject: {
-            testParameter: referenceConfig.testObject.testParameter,
-          },
-          priorityTest: 'WrongDefaultValue',
-          multipleParameterObject: {
-            test1: referenceConfig.multipleParameterObject.test1,
-          },
-          array: ['a', 'b', 'c'],
-          arrayToNotOverride: ['o', 'v', 'e' ,'r' ,'r' ,'i' ,'d' ,'e'],
-        },
-      },
-      {
-        plugin: 'OtherDefaultValueParser',
-        config:{
-          priorityTest: referenceConfig.priorityTest,
-          multipleParameterObject: {
-            test2: referenceConfig.multipleParameterObject.test2,
-          },
-          arrayToNotOverride: referenceConfig.arrayToNotOverride,
-        },
-      },
-    ];
-    done();
-  });
-
-  var config;
-  beforeEach(function(done) {
-    config = merge(sources, fakeParsedConfig);
-    done();
-  });
-  afterEach(function(done) {
-    config = undefined;
+     response = merge({
+      sources: sources,
+      config: config,
+    }, results);
     done();
   });
 
   it('return a config', function(done) {
-    assert.equal(referenceConfig.test, config.test);
+    assert.equal(response.test, 'test.ObjectValue');
     done();
   });
 
   it('can parse sub levels', function(done) {
-    assert.equal(referenceConfig.testObject.testParameter, config.testObject.testParameter);
+    assert.equal(response.object.test1, 'object.test1.DefaultValue');
     done();
   });
 
-  it('can prioritize plugins', function(done) {
-    assert.equal(referenceConfig.priorityTest, config.priorityTest);
+  it('can prioritize sources', function(done) {
+    assert.equal(response.priorityTest, 'RightDefaultValue');
     done();
   });
 
   it('does fill all parameters (without conflicts) with different plugins results', function(done) {
-    assert.equal(referenceConfig.multipleParameterObject.test1, config.multipleParameterObject.test1);
-    assert.equal(referenceConfig.multipleParameterObject.test2, config.multipleParameterObject.test2);
+    assert.equal(response.object.test1, 'object.test1.DefaultValue');
+    assert.equal(response.object.test2, 'object.test2.ObjectValue');
     done();
   });
 
   it('does work with arrays as config parameter', function(done) {
-    assert.equal(referenceConfig.array.length, config.array.length);
+    var array = [5, 6, 7];
+    assert.equal(response.array.length, array.length);
     for (var i = 0; i < config.array.length; i++) {
-      assert.equal(referenceConfig.array[i], config.array[i]);
+      assert.equal(config.array[i], array[i]);
     }
-    done();
-  });
-
-  it('doesn\'t override arrays when already setted in the config', function(done) {
-    assert.equal(referenceConfig.arrayToNotOverride, config.arrayToNotOverride);
     done();
   });
 });

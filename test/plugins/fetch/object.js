@@ -18,18 +18,44 @@ describe('Plugin: Objects', function() {
   });
 
   describe('.load()', function() {
-    var configOptions;
+    var config = {
+      test: {
+        defaultValue: null,
+      },
+      jsonField: {
+        defaultValue: null,
+      },
+      xmlField: {
+        defaultValue: null,
+      },
+      propertiesField: {
+        defaultValue: null,
+      },
+      yamlField: {
+        defaultValue: null,
+      },
+      testNumber: {
+        defaultValue: null,
+      },
+      object: {
+        test1: {
+          defaultValue: null,
+        },
+        test2: {
+          defaultValue: null,
+        },
+      },
+      array: {
+        defaultValue: null,
+      },
+    };
     var response;
     before(function(done) {
-      var resourceDirectoryName = __dirname + '/../../resources/';
-      var jsonSource = fs.readFileSync(resourceDirectoryName + 'config.json');
-      var xmlSource = fs.readFileSync(resourceDirectoryName + 'config.xml');
-      var propertiesSource = fs.readFileSync(resourceDirectoryName + 'config.properties');
-      var yamlSource = fs.readFileSync(resourceDirectoryName + 'config.yaml');
-
-      var sources = {
-        parameters: [
-          {
+      plugin.load(
+        {},
+        {
+          config: config,
+          source: {
             type: pluginName,
             priority: 50,
             parser: 'RAW',
@@ -41,102 +67,14 @@ describe('Plugin: Objects', function() {
                   test2: 'object.test2.ObjectValue'
               },
               array: [5, 6, 7],
-              priorityTest: 'Something\'s wrong',
             },
-          },
-          {
-            type: pluginName,
-            priority: 10,
-            parser: 'JSON',
-            object: jsonSource,
-          },
-          {
-            type: pluginName,
-            priority: 20,
-            parser: 'XML',
-            object: xmlSource,
-          },
-          {
-            type: pluginName,
-            priority: 30,
-            parser: 'Properties',
-            object: propertiesSource,
-          },
-          {
-            type: pluginName,
-            priority: 40,
-            parser: 'YAML',
-            object: yamlSource,
-          },
-          {
-            type: pluginName,
-            priority: 100,
-            parser: 'RAW',
-            object: {
-              priorityTest: 'HasPriority',
-            },
-          },
-        ],
-      };
-      configOptions = {
-        test: {
-          defaultValue: null,
+          }
         },
-        jsonField: {
-          defaultValue: null,
-        },
-        xmlField: {
-          defaultValue: null,
-        },
-        propertiesField: {
-          defaultValue: null,
-        },
-        yamlField: {
-          defaultValue: null,
-        },
-        testNumber: {
-          defaultValue: null,
-        },
-        object: {
-          test1: {
-            defaultValue: null,
-          },
-          test2: {
-            defaultValue: null,
-          },
-        },
-        array: {
-          defaultValue: null,
-        },
-        priorityTest:{
-          defaultValue: null,
-        }
-      };
-      plugin.load(sources, configOptions, function(err, configLoaded) {
-        if(err) return done(err);
-        response = configLoaded;
-        done();
-      });
-    });
-
-    it('should load JSON', function(done) {
-      assert.equal(response.config.jsonField, 'JsonValue');
-      done();
-    });
-
-    it('should load XML', function(done) {
-      assert.equal(response.config.xmlField, 'XMLValue');
-      done();
-    });
-
-    it('should load Properties', function(done) {
-      assert.equal(response.config.propertiesField, 'PropertiesValue');
-      done();
-    });
-
-    it('should load YAML', function(done) {
-      assert.equal(response.config.yamlField, 'YamlValue');
-      done();
+        function(err, configLoaded) {
+          if(err) return done(err);
+          response = configLoaded;
+          done();
+        });
     });
 
     it('should return plugin name', function(done) {
@@ -169,106 +107,122 @@ describe('Plugin: Objects', function() {
       done();
     });
 
-    it('should manage priority between objects', function(done) {
-      assert.equal(response.config.priorityTest, 'HasPriority');
-      done();
-    });
-  });
+    var resourceDirectoryName = __dirname + '/../../resources/assets/';
+    describe('- JSON format', function() {
+      var source = fs.readFileSync(resourceDirectoryName + 'config.json');
 
-  describe('.loadObjects()', function() {
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              priority: 0,
+              parser: 'JSON',
+              object: source,
+            }
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
 
-    var configOptions;
-    var response;
-    before(function(done) {
-      var sources = [
-        {
-            priorityTest: 'HasPriority',
-        },
-        {
-          test: 'test.ObjectValue',
-          testNumber: 5,
-          object: {
-              test1: 'object.test1.ObjectValue',
-              test2: 'object.test2.ObjectValue'
-          },
-          array: [5, 6, 7],
-          priorityTest: 'Something\'s wrong',
-        }
-      ];
-      configOptions = {
-        test: {
-          defaultValue: null,
-        },
-        jsonField: {
-          defaultValue: null,
-        },
-        xmlField: {
-          defaultValue: null,
-        },
-        propertiesField: {
-          defaultValue: null,
-        },
-        yamlField: {
-          defaultValue: null,
-        },
-        testNumber: {
-          defaultValue: null,
-        },
-        object: {
-          test1: {
-            defaultValue: null,
-          },
-          test2: {
-            defaultValue: null,
-          },
-        },
-        array: {
-          defaultValue: null,
-        },
-        priorityTest:{
-          defaultValue: null,
-        }
-      };
-      plugin.loadObjects(sources, configOptions, function(err, configLoaded) {
-        if(err) return done(err);
-        response = configLoaded;
+      it('should load JSON', function(done) {
+        assert.equal(response.config.jsonField, 'JsonValue');
         done();
       });
     });
 
-    it('should return plugin name', function(done) {
-      assert.equal(response.plugin, pluginName);
-      done();
+    describe('- XML format', function() {
+      var source = fs.readFileSync(resourceDirectoryName + 'config.xml');
+
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              priority: 0,
+              parser: 'XML',
+              object: source,
+            }
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load XML', function(done) {
+        assert.equal(response.config.xmlField, 'XMLValue');
+        done();
+      });
     });
 
-    it('should load root nodes', function(done) {
-      assert.equal(response.config.test, 'test.ObjectValue');
-      done();
+    describe('- Properties format', function() {
+      var source = fs.readFileSync(resourceDirectoryName + 'config.properties');
+
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              priority: 0,
+              parser: 'Properties',
+              object: source,
+            }
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load Properties', function(done) {
+        assert.equal(response.config.propertiesField, 'PropertiesValue');
+        done();
+      });
     });
 
-    it('should load numbers', function(done) {
-      assert.equal(response.config.testNumber, 5);
-      done();
-    });
+    describe('- YAML format', function() {
+      var source = fs.readFileSync(resourceDirectoryName + 'config.yaml');
 
-    it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, 'object.test1.ObjectValue');
-      assert.equal(response.config.object.test2, 'object.test2.ObjectValue');
-      done();
-    });
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              priority: 0,
+              parser: 'YAML',
+              object: source,
+            }
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
 
-    it('should load array', function(done) {
-      var array = [5, 6, 7];
-      assert.equal(response.config.array.length, array.length);
-      for (var i = 0; i < response.config.array.length; i++) {
-        assert.equal(response.config.array[i], array[i]);
-      }
-      done();
-    });
-
-    it('should manage priority between objects', function(done) {
-      assert.equal(response.config.priorityTest, 'HasPriority');
-      done();
+      it('should load YAML', function(done) {
+        assert.equal(response.config.yamlField, 'YamlValue');
+        done();
+      });
     });
   });
+
 });

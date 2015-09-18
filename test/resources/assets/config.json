@@ -1,4 +1,5 @@
 {
+  "test": "Test",
   "jsonField": "JsonValue",
   "testNumber": 2,
   "object": {

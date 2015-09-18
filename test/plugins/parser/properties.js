@@ -9,6 +9,7 @@ var name = 'Properties';
 
 describe('Plugin: Properties Parser', function() {
 
+  var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + format, function(done) {
     assert.equal(parser.format, format);
     done();
@@ -25,7 +26,7 @@ describe('Plugin: Properties Parser', function() {
   });
 
   it('should parse properties file', function(done) {
-    var content = fs.readFileSync(__dirname + '/../../resources/config.properties');
+    var content = fs.readFileSync(resourceDirectory + 'config.properties');
     var expected = {
       propertiesField: 'PropertiesValue',
       testNumber: '2',
@@ -43,7 +44,7 @@ describe('Plugin: Properties Parser', function() {
     });
   });
   it('should not parse wrong properties format', function(done) {
-    var xmlContent = fs.readFileSync(__dirname + '/../../resources/wrong.properties');
+    var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.properties');
     parser.parse(xmlContent, function(err) {
       assert.notEqual(err, undefined);
       assert.notEqual(err, null);

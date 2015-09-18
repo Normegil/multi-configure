@@ -1,10 +1,11 @@
 'use strict';
 
 var assert = require('chai').assert;
+var h = require('../../resources/tools/helper');
 var plugin = require('../../../lib/plugins/fetch/environmentVariables');
 
-describe('Plugin: Environment Variables', function() {
-  var pluginName = 'Environment Variables';
+var pluginName = 'EnvironmentVariables';
+describe('Plugin: ' + pluginName, function() {
 
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
@@ -17,40 +18,23 @@ describe('Plugin: Environment Variables', function() {
   });
 
   describe('.load()', function() {
-    var variablePrefix = 'CONFIG_MANAGER_TEST_';
-
-    var configOptions;
+    var config = h.config;
     var response;
     before(function(done) {
-      configOptions = {
-        test: {
-          defaultValue: null,
-          environmentVariable: variablePrefix + 'TEST',
-        },
-        testNumber: {
-          defaultValue: null,
-          environmentVariable: variablePrefix + 'TEST_NUMBER',
-        },
-        object: {
-          test1: {
-            defaultValue: null,
-            environmentVariable: variablePrefix + 'OBJECT_TEST1',
-          },
-          test2: {
-            defaultValue: null,
-            environmentVariable: variablePrefix + 'OBJECT_TEST2',
+      plugin.load(
+        {},
+        {
+          config: config,
+          sources: {
+            type: pluginName,
+            priority: 20,
           },
         },
-        array: {
-          defaultValue: null,
-          environmentVariable: variablePrefix + 'ARRAY',
-        },
-      };
-      plugin.load({}, configOptions, function(err, configLoaded) {
-        if(err) return done(err);
-        response = configLoaded;
-        done();
-      });
+        function(err, result) {
+          if(err) return done(err);
+          response = result;
+          done();
+        });
     });
 
     it('should return plugin name', function(done) {

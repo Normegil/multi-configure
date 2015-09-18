@@ -8,6 +8,7 @@ var name = 'xml';
 
 describe('Plugin: XML Parser', function() {
 
+  var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
     done();
@@ -24,7 +25,7 @@ describe('Plugin: XML Parser', function() {
   });
 
   it('should parse xml file', function(done) {
-    var xmlContent = fs.readFileSync(__dirname + '/../../resources/config.xml');
+    var xmlContent = fs.readFileSync(resourceDirectory + 'config.xml');
     var expected = {
       xmlField: 'XMLValue',
       testNumber: 2,
@@ -40,8 +41,9 @@ describe('Plugin: XML Parser', function() {
       done();
     });
   });
+  
   it('should not parse wrong xml format', function(done) {
-    var xmlContent = fs.readFileSync(__dirname + '/../../resources/wrong.xml');
+    var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.xml');
     parser.parse(xmlContent, function(err) {
       assert.notEqual(err, undefined);
       assert.notEqual(err, null);

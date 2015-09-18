@@ -2,10 +2,9 @@
 
 var assert = require('chai').assert;
 var plugin = require('../../../lib/plugins/fetch/file');
-var fs = require('fs');
 
-describe('Plugin: File', function() {
-  var pluginName = 'File';
+var pluginName = 'File';
+describe('Plugin: ' + pluginName, function() {
 
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
@@ -18,73 +17,59 @@ describe('Plugin: File', function() {
   });
 
   describe('.load()', function() {
-    var configOptions;
+    var config = {
+      test: {
+        defaultValue: null,
+      },
+      jsonField: {
+        defaultValue: null,
+      },
+      xmlField: {
+        defaultValue: null,
+      },
+      propertiesField: {
+        defaultValue: null,
+      },
+      yamlField: {
+        defaultValue: null,
+      },
+      testNumber: {
+        defaultValue: null,
+      },
+      object: {
+        test1: {
+          defaultValue: null,
+        },
+        test2: {
+          defaultValue: null,
+        },
+      },
+      array: {
+        defaultValue: null,
+      },
+      priorityTest: {
+        defaultValue: null,
+      },
+    };
     var response;
-    var resourceFolder = __dirname + '/../../resources/';
+    var resourceFolder = __dirname + '/../../resources/assets/';
+
     before(function(done) {
-      var sources = {
-        parameters: [
-          {
-            type: pluginName,
-            priority: 0,
-            path: resourceFolder + 'config.xml',
-          },
-          {
-            type: pluginName,
-            priority: 5,
-            path: resourceFolder + 'config.json',
-          },
-          {
-            type: pluginName,
-            priority: 10,
-            path: resourceFolder + 'config.properties',
-          },
-          {
-            type: pluginName,
-            priority: 15,
-            path: resourceFolder + 'config.yaml',
-          },
-        ],
-      };
-      configOptions = {
-        test: {
-          defaultValue: null,
-        },
-        jsonField: {
-          defaultValue: null,
-        },
-        xmlField: {
-          defaultValue: null,
-        },
-        propertiesField: {
-          defaultValue: null,
-        },
-        yamlField: {
-          defaultValue: null,
-        },
-        testNumber: {
-          defaultValue: null,
-        },
-        object: {
-          test1: {
-            defaultValue: null,
-          },
-          test2: {
-            defaultValue: null,
+      plugin.load(
+        {},
+        {
+          config: config,
+          source: {
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.json',
           },
         },
-        array: {
-          defaultValue: null,
-        },
-        priorityTest: {
-          defaultValue: null,
-        },
-      };
-      plugin.load(sources, configOptions, function(err, configLoaded) {
-        if(err) return done(err);
-        response = configLoaded;
-        done();
-      });
+        function(err, result) {
+          if(err) return done(err);
+          response = result;
+          done();
+        });
     });
 
     it('should return plugin name', function(done) {
@@ -92,73 +77,8 @@ describe('Plugin: File', function() {
       done();
     });
 
-    it('should handle JSON parsing errors', function(done) {
-      var wrongSource = {
-        parameters: [
-          {
-            type: pluginName,
-            path: resourceFolder + 'wrong.json',
-          },
-        ],
-      };
-      plugin.load(wrongSource, configOptions, function(err) {
-        if(err) return done();
-        else return done(new Error('Should have failed on loading a wrong config file'));
-      });
-    });
-
-    it('should handle XML parsing errors', function(done) {
-      var wrongSource = {
-        parameters: [
-          {
-            type: pluginName,
-            path: resourceFolder + 'wrong.xml',
-          },
-        ],
-      };
-      plugin.load(wrongSource, configOptions, function(err) {
-        if(err) return done();
-        else return done(new Error('Should have failed on loading a wrong config file'));
-      });
-    });
-
-    it('should handle unknown file type errors', function(done) {
-      var wrongSource = {
-        parameters: [
-          {
-            type: pluginName,
-            path: resourceFolder + 'wrong.unknown',
-          },
-        ],
-      };
-      plugin.load(wrongSource, configOptions, function(err) {
-        if(err) return done();
-        else return done(new Error('Should have failed on loading a wrong config file type'));
-      });
-    });
-
-    it('should load Json file', function(done) {
-      assert.equal(response.config.jsonField, 'JsonValue');
-      done();
-    });
-
-    it('should load XML file', function(done) {
-      assert.equal(response.config.xmlField, 'XMLValue');
-      done();
-    });
-
-    it('should load Properties file', function(done) {
-      assert.equal(response.config.propertiesField, 'PropertiesValue');
-      done();
-    });
-
-    it('should load YAML file', function(done) {
-      assert.equal(response.config.yamlField, 'YamlValue');
-      done();
-    });
-
     it('should load root nodes', function(done) {
-      assert.equal(response.config.xmlField, 'XMLValue');
+      assert.equal(response.config.test, 'Test');
       done();
     });
 
@@ -168,8 +88,8 @@ describe('Plugin: File', function() {
     });
 
     it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, 'object.test1.YAML');
-      assert.equal(response.config.object.test2, 'object.test2.YAML');
+      assert.equal(response.config.object.test1, 'object.test1.value');
+      assert.equal(response.config.object.test2, 'object.test2.value');
       done();
     });
 
@@ -182,9 +102,157 @@ describe('Plugin: File', function() {
       done();
     });
 
-    it('should manage priorities between files', function(done) {
-      assert.equal(response.config.priorityTest, 'HasPriority');
-      done();
+    it('should handle unknown file type errors', function(done) {
+      plugin.load(
+        {}, {
+          config: config,
+          source: {
+            type: pluginName,
+            path: resourceFolder + 'wrong.unknown',
+          }
+        }, function(err) {
+          if(err) return done();
+          else return done(new Error('Should have failed on loading a wrong config file type'));
+        });
+    });
+
+    describe('- JSON Specific', function() {
+
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+                type: pluginName,
+                priority: 0,
+                path: resourceFolder + 'config.json',
+            },
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load Json file', function(done) {
+        assert.equal(response.config.jsonField, 'JsonValue');
+        done();
+      });
+
+      it('should handle parsing errors', function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              path: resourceFolder + 'wrong.json',
+            }
+          },
+          function(err) {
+            if(err) return done();
+            else return done(new Error('Should have failed on loading a wrong config file'));
+          });
+      });
+    });
+
+    describe('- XML Specific', function() {
+
+      var response;
+        before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+                type: pluginName,
+                priority: 0,
+                path: resourceFolder + 'config.xml',
+            },
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load XML file', function(done) {
+        assert.equal(response.config.xmlField, 'XMLValue');
+        done();
+      });
+
+      it('should handle parsing errors', function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+              type: pluginName,
+              path: resourceFolder + 'wrong.xml',
+            }
+          },
+          function(err) {
+            if(err) return done();
+            else return done(new Error('Should have failed on loading a wrong config file'));
+          });
+      });
+    });
+
+    describe('- Properties Specific', function() {
+
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+                type: pluginName,
+                priority: 0,
+                path: resourceFolder + 'config.properties',
+            },
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load Properties file', function(done) {
+        assert.equal(response.config.propertiesField, 'PropertiesValue');
+        done();
+      });
+    });
+
+    describe('- YAML Specific', function() {
+      var response;
+      before(function(done) {
+        plugin.load(
+          {},
+          {
+            config: config,
+            source: {
+                type: pluginName,
+                priority: 0,
+                path: resourceFolder + 'config.yaml',
+            },
+          },
+          function(err, result) {
+            if(err) return done(err);
+            response = result;
+            done();
+          });
+      });
+
+      it('should load YAML file', function(done) {
+        assert.equal(response.config.yamlField, 'YamlValue');
+        done();
+      });
     });
   });
 });

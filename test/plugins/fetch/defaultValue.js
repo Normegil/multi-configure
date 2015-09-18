@@ -1,10 +1,12 @@
 'use strict';
 
 var assert = require('chai').assert;
+var h = require('../../resources/tools/helper');
 var plugin = require('../../../lib/plugins/fetch/defaultValue');
 
-describe('Plugin: Defaul Values', function() {
-  var pluginName = 'DefaultValues';
+var pluginName = 'DefaultValues';
+
+describe('Plugin: ' + pluginName, function() {
 
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
@@ -17,33 +19,22 @@ describe('Plugin: Defaul Values', function() {
   });
 
   describe('\'load\' method', function() {
-    var configOptions;
+    var config = h.config;
     var response;
     before(function(done) {
-      configOptions = {
-        test: {
-          defaultValue: 'test.DefaultValue',
-        },
-        testNumber: {
-          defaultValue: 0,
-        },
-        object: {
-          test1: {
-            defaultValue: 'object.test1.DefaultValue1',
+      plugin.load(
+        {},
+        {
+          config: config,
+          sources: {
+            type: pluginName,
+            priority: 0,
           },
-          test2: {
-            defaultValue: 'object.test2.DefaultValue1',
-          },
-        },
-        array: {
-          defaultValue: [1, 2, 3],
-        },
-      };
-      plugin.load({}, configOptions, function(err, configLoaded) {
-        if(err) return done(err);
-        response = configLoaded;
-        done();
-      });
+        }, function(err, result) {
+          if(err) return done(err);
+          response = result;
+          done();
+        });
     });
 
     it('should return plugin name', function(done) {
@@ -52,23 +43,23 @@ describe('Plugin: Defaul Values', function() {
     });
 
     it('should load root nodes', function(done) {
-      assert.equal(response.config.test, configOptions.test.defaultValue);
+      assert.equal(response.config.test, config.test.defaultValue);
       done();
     });
 
     it('should return numbers', function(done) {
-      assert.equal(response.config.testNumber, configOptions.testNumber.defaultValue);
+      assert.equal(response.config.testNumber, config.testNumber.defaultValue);
       done();
     });
 
     it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, configOptions.object.test1.defaultValue);
-      assert.equal(response.config.object.test2, configOptions.object.test2.defaultValue);
+      assert.equal(response.config.object.test1, config.object.test1.defaultValue);
+      assert.equal(response.config.object.test2, config.object.test2.defaultValue);
       done();
     });
 
     it('should load array', function(done) {
-      assert.equal(response.config.array, configOptions.array.defaultValue);
+      assert.equal(response.config.array, config.array.defaultValue);
       done();
     });
   });

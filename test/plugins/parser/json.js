@@ -8,6 +8,7 @@ var name = 'json';
 
 describe('Plugin: JSON Parser', function() {
 
+  var resourceDirectory = __dirname + '/../../resources/assets/';
   it('should accept format ' + name, function(done) {
     assert.equal(parser.format, name);
     done();
@@ -24,9 +25,10 @@ describe('Plugin: JSON Parser', function() {
   });
 
   it('should parse json file', function(done) {
-    var content = fs.readFileSync(__dirname + '/../../resources/config.json');
+    var content = fs.readFileSync(resourceDirectory + 'config.json');
     var expected = {
       jsonField: 'JsonValue',
+      test: 'Test',
       testNumber: 2,
       priorityTest: 'Something\'s wrong',
       array: [3, 4, 5],
@@ -42,7 +44,7 @@ describe('Plugin: JSON Parser', function() {
     });
   });
   it('should not parse wrong json format', function(done) {
-    var xmlContent = fs.readFileSync(__dirname + '/../../resources/wrong.json');
+    var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.json');
     parser.parse(xmlContent, function(err) {
       assert.notEqual(err, undefined);
       assert.notEqual(err, null);

@@ -24,7 +24,7 @@ describe('Plugin: YAML Parser', function() {
   });
 
   it('should parse yaml file', function(done) {
-    var content = fs.readFileSync(__dirname + '/../../resources/config.yaml');
+    var content = fs.readFileSync(__dirname + '/../../resources/assets/config.yaml');
     var expected = {
       yamlField: 'YamlValue',
       testNumber: 2,

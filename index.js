@@ -5,9 +5,6 @@ var uuid = require('node-uuid');
 var async = require('async');
 var merge = require('./lib/merge');
 var pluginManager = require('./lib/pluginLoader');
-var helper = require('./lib/helper');
-
-module.exports.helper = helper;
 
 module.exports = function config(plugins, options, callback) {
   loadPlugins(plugins, function onLoad(err, plugins) {
@@ -18,15 +15,13 @@ module.exports = function config(plugins, options, callback) {
   });
 };
 
-function loadPlugins(pluginDefinitions, callback) {
+function loadPlugins(customPlugins, callback) {
   var pluginFolder = __dirname + '/lib/plugins/fetch/';
-  var pluginType = 'fetch';
-  pluginManager.load(
+  pluginManager.loadAll(
     {
       path: pluginFolder,
-      definitions: pluginDefinitions,
+      custom: customPlugins,
     },
-    pluginType,
     callback);
 }
 
@@ -37,18 +32,18 @@ function getConfiguration(plugins, options, callback) {
 
   async.map(
     options.sources,
-    function loadConfig(definition, asyncCallback) {
+    function loadConfig(source, asyncCallback) {
       var plugin = u.filter(plugins, function getPlugin(plugin) {
-        return definition.type === plugin.name;
+        return source.type === plugin.name;
       });
       plugin[0].load(
         plugins,
-        {source: definition, config: options.config},
+        {source: source, config: options.config},
         function assignIDToResult(err, result) {
           if (err) {
             return asyncCallback(err);
           }
-          result.sourceID = definition.id;
+          result.sourceID = source.id;
           asyncCallback(null, result);
         });
     },

@@ -1,7 +1,14 @@
 'use strict';
 
+var relativePathToPlugins = '../../../lib/plugins/';
+var relativePathToParsers = relativePathToPlugins + 'parser/';
 var assert = require('chai').assert;
-var plugin = require('../../../lib/plugins/fetch/file');
+var plugin = require(relativePathToPlugins + 'fetch/file');
+var pluginLoader = require('../../../lib/pluginLoader');
+var jsonParser = require('./' + relativePathToParsers + 'json');
+var xmlParser = require('./' + relativePathToParsers + 'xml');
+var propertiesParser = require('./' + relativePathToParsers + 'properties');
+var yamlParser = require('./' + relativePathToParsers + 'yaml');
 
 var pluginName = 'File';
 describe('Plugin: ' + pluginName, function() {
@@ -54,21 +61,30 @@ describe('Plugin: ' + pluginName, function() {
     var resourceFolder = __dirname + '/../../resources/assets/';
 
     before(function(done) {
-      plugin.load(
-        {},
+      pluginLoader.load(
+        {path: __dirname + '/' + relativePathToParsers},
         {
-          config: config,
-          source: {
-            type: pluginName,
-            priority: 0,
-            path: resourceFolder + 'config.json',
-          },
+          type: 'parser',
         },
-        function(err, result) {
+        function onPluginLoaded(err, parsers) {
           if (err) {return done(err);}
-          response = result;
-          done();
-        });
+          plugin.load(
+            parsers,
+            {
+              config: config,
+              source: {
+                type: pluginName,
+                priority: 0,
+                path: __dirname + '/../../resources/assets/config.json',
+              },
+            },
+            function(err, result) {
+              if (err) {return done(err);}
+              response = result;
+              done();
+            });
+        }
+      );
     });
 
     it('should return plugin name', function(done) {
@@ -122,7 +138,7 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [jsonParser],
           {
             config: config,
             source: {
@@ -167,7 +183,7 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [xmlParser],
           {
             config: config,
             source: {
@@ -212,7 +228,7 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [propertiesParser],
           {
             config: config,
             source: {
@@ -238,7 +254,7 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [yamlParser],
           {
             config: config,
             source: {

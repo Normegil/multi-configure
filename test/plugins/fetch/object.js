@@ -1,12 +1,19 @@
 'use strict';
 
+var relativePathToPlugins = '../../../lib/plugins/';
+var relativePathToParsers = relativePathToPlugins + 'parser/';
+
 var fs = require('fs');
 var assert = require('chai').assert;
-var plugin = require('../../../lib/plugins/fetch/object');
+var plugin = require('./' + relativePathToPlugins + 'fetch/object');
+var pluginLoader = require('../../../lib/pluginLoader');
+var jsonParser = require('./' + relativePathToParsers + 'json');
+var xmlParser = require('./' + relativePathToParsers + 'xml');
+var propertiesParser = require('./' + relativePathToParsers + 'properties');
+var yamlParser = require('./' + relativePathToParsers + 'yaml');
 
-describe('Plugin: Objects', function() {
-  var pluginName = 'Objects';
-
+var pluginName = 'Object';
+describe('Plugin: ' + pluginName, function() {
   it('should be named \'' + pluginName + '\'', function(done) {
     assert.equal(pluginName, plugin.name);
     done();
@@ -51,30 +58,39 @@ describe('Plugin: Objects', function() {
     };
     var response;
     before(function(done) {
-      plugin.load(
-        {},
+      pluginLoader.load(
+        {path: __dirname + '/' + relativePathToParsers},
         {
-          config: config,
-          source: {
-            type: pluginName,
-            priority: 50,
-            parser: 'RAW',
-            object: {
-              test: 'test.ObjectValue',
-              testNumber: 5,
-              object: {
-                test1: 'object.test1.ObjectValue',
-                test2: 'object.test2.ObjectValue',
-              },
-              array: [5, 6, 7],
-            },
-          },
+          type: 'parser',
         },
-        function(err, configLoaded) {
+        function onPluginLoaded(err, parsers) {
           if (err) {return done(err);}
-          response = configLoaded;
-          done();
-        });
+          plugin.load(
+            parsers,
+            {
+              config: config,
+              source: {
+                type: pluginName,
+                priority: 50,
+                parser: 'RAW',
+                object: {
+                  test: 'test.ObjectValue',
+                  testNumber: 5,
+                  object: {
+                    test1: 'object.test1.ObjectValue',
+                    test2: 'object.test2.ObjectValue',
+                  },
+                  array: [5, 6, 7],
+                },
+              },
+            },
+            function(err, result) {
+              if (err) {return done(err);}
+              response = result;
+              done();
+            });
+        }
+      );
     });
 
     it('should return plugin name', function(done) {
@@ -114,7 +130,7 @@ describe('Plugin: Objects', function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [jsonParser],
           {
             config: config,
             source: {
@@ -143,7 +159,7 @@ describe('Plugin: Objects', function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [xmlParser],
           {
             config: config,
             source: {
@@ -172,7 +188,7 @@ describe('Plugin: Objects', function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [propertiesParser],
           {
             config: config,
             source: {
@@ -201,7 +217,7 @@ describe('Plugin: Objects', function() {
       var response;
       before(function(done) {
         plugin.load(
-          {},
+          [yamlParser],
           {
             config: config,
             source: {

@@ -33,5 +33,39 @@ describe('Main', function() {
           done();
         });
     });
+
+    it('load and use custom parser plugins', function(done) {
+      config(
+        [
+          {
+            type: 'parser',
+            name: 'MyParser',
+            parse: function parse(source, callback) {
+              callback(null, {
+                test: this.name + 'Test',
+              });
+            },
+          },
+        ],
+        {
+          config: {
+            test: {
+              defaultValue: 'DefaultTest',
+            },
+          },
+          sources: [
+            {
+              type: 'Object',
+              parser: 'MyParser',
+              priority: 0,
+            },
+          ],
+        },
+        function(err, config) {
+          if (err) { return done(err); }
+          assert.equal(config.test, 'MyParserTest');
+          done();
+        });
+    });
   });
 });

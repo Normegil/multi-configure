@@ -110,10 +110,10 @@ Then an object with two properties, `sources` and `config`.
 Lastly, you have the classic NodeJS callback, starting with the `err` field in case of errors in the process, and the configuration as loaded by the library.
 
 ### Plugins
-See [Plugins] (https://github.com/Normegil/get-multi-config/wiki/)
+See [Plugins] (https://github.com/Normegil/get-multi-config/wiki/Plugins)
 
 ### Merging and prioritize mecanism
 The merging operation happens when all the source are parsed and the configurations are loaded. Using `priority` fields from the sources, The merge will get the value from the most prioritized source (Higher number) and if the value is *undefined* (*null* values will be kept), it will got to the next source by order of priority. Once all values are filled or all configuration are used, the library will send back the object built.
 
 ## Developers
-See [Developers] (https://github.com/Normegil/get-multi-config/wiki/)
+See [Developers] (https://github.com/Normegil/get-multi-config/wiki/Developers)

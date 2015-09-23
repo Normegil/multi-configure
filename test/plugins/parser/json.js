@@ -8,11 +8,6 @@ var name = 'json';
 
 describe('Plugin: JSON Parser', function() {
   var resourceDirectory = __dirname + '/../../resources/assets/';
-  it('should accept format ' + name, function(done) {
-    assert.equal(parser.format, name);
-    done();
-  });
-
   it('should have name ' + name.toUpperCase(), function(done) {
     assert.equal(parser.name, name.toUpperCase());
     done();

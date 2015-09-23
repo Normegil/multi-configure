@@ -4,15 +4,10 @@ var fs = require('fs');
 var assert = require('chai').assert;
 var parser = require('../../../lib/plugins/parser/properties');
 
-var format = 'properties';
 var name = 'Properties';
 
 describe('Plugin: Properties Parser', function() {
   var resourceDirectory = __dirname + '/../../resources/assets/';
-  it('should accept format ' + format, function(done) {
-    assert.equal(parser.format, format);
-    done();
-  });
 
   it('should have name ' + name, function(done) {
     assert.equal(parser.name, name);

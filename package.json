@@ -1,12 +1,17 @@
 {
-  "name": "config-manager",
-  "version": "0.0.0",
-  "description": "Config Manager that let you use different sources for same parameters, as well as prioritizing those sources",
+  "name": "get-multi-config",
+  "version": "0.1.0",
+  "description": "Multiple-Source, Plugin-based configuration loader that let you use and prioritize different sources (Files, Objects, Environment variables, ...) to get one object resulting from the merge of all configs from these sources",
   "main": "index.js",
   "scripts": {
     "mocha": "./mocha.sh",
     "lint": "node_modules/jshint/bin/jshint lib test && node_modules/jscs/bin/jscs -c test/.jscsrc test && node_modules/jscs/bin/jscs -c .jscsrc lib",
-    "test": "npm run lint && npm run mocha"
+    "test": "npm run lint && npm run mocha",
+    "push": "npm test && git push && git push --tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
   },
   "keywords": [
     "configuration",

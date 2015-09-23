@@ -1,0 +1,10 @@
+yamlField: YamlValue
+testNumber: 2
+priorityTest: HasPriority
+object:
+  test1: object.test1.YAML
+  test2: object.test2.YAML
+array:
+  - 3
+  - 4
+  - 5

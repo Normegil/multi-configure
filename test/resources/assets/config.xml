@@ -1,0 +1,12 @@
+<config>
+  <xmlField>XMLValue</xmlField>
+  <testNumber>2</testNumber>
+  <priorityTest>Something's wrong</priorityTest>
+  <object>
+    <test1>object.test1.XMLValue</test1>
+    <test2>object.test2.XMLValue</test2>
+  </object>
+  <array>3</array>
+  <array>4</array>
+  <array>5</array>
+</config>

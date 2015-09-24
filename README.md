@@ -1,7 +1,7 @@
 # Multi-configure
 **Still a early version, API can still change**
 
-Get-multi-config is a small library (for NodeJs apps) built to manage the configuration of your application. It will let you define what your configuration looks like, which sources to use and even use your own plugins for non-forseen source types. Finally, you will be able to set priority between multiple sources to define which source your prefer over other ones. It currently support as sources:
+Small library (for NodeJs apps) built to manage the configuration of your application. It will let you define what your configuration looks like, which sources to use and even use your own plugins for non-forseen source types. Finally, you will be able to set priority between multiple sources to define which source your prefer over other ones. It currently support as sources:
 - Default Values
 - Environment Variables
 - Files

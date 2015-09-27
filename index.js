@@ -51,7 +51,6 @@ function getConfiguration(plugins, options, callback) {
       if (err) {
         callback(err);
       }
-      var config = merge(options, results);
-      callback(null, config);
+      merge(options.sources, results, callback);
     });
 }

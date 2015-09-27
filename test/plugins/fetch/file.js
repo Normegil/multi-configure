@@ -23,40 +23,6 @@ describe('Plugin: ' + pluginName, function() {
   });
 
   describe('.load()', function() {
-    var config = {
-      test: {
-        defaultValue: null,
-      },
-      jsonField: {
-        defaultValue: null,
-      },
-      xmlField: {
-        defaultValue: null,
-      },
-      propertiesField: {
-        defaultValue: null,
-      },
-      yamlField: {
-        defaultValue: null,
-      },
-      testNumber: {
-        defaultValue: null,
-      },
-      object: {
-        test1: {
-          defaultValue: null,
-        },
-        test2: {
-          defaultValue: null,
-        },
-      },
-      array: {
-        defaultValue: null,
-      },
-      priorityTest: {
-        defaultValue: null,
-      },
-    };
     var response;
     var resourceFolder = __dirname + '/../../resources/assets/';
 
@@ -71,7 +37,6 @@ describe('Plugin: ' + pluginName, function() {
           plugin.load(
             parsers,
             {
-              config: config,
               source: {
                 type: pluginName,
                 priority: 0,
@@ -120,7 +85,6 @@ describe('Plugin: ' + pluginName, function() {
     it('should handle unknown file type errors', function(done) {
       plugin.load(
         {}, {
-          config: config,
           source: {
             type: pluginName,
             path: resourceFolder + 'wrong.unknown',
@@ -140,7 +104,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [jsonParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -163,7 +126,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           {},
           {
-            config: config,
             source: {
               type: pluginName,
               path: resourceFolder + 'wrong.json',
@@ -185,7 +147,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [xmlParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -208,7 +169,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           {},
           {
-            config: config,
             source: {
               type: pluginName,
               path: resourceFolder + 'wrong.xml',
@@ -230,7 +190,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [propertiesParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -256,7 +215,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [yamlParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,

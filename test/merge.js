@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('chai').assert;
-var h = require('./resources/tools/helper');
 var merge = require('../lib/merge');
 
 describe('\'merge\' method', function() {
@@ -16,10 +15,8 @@ describe('\'merge\' method', function() {
       parser: 'RAW',
       priority: 10,
       id: '3',
-      object: {},
     },
   ];
-  var config = h.config;
   var results = [
     {
       type: 'DefaultValues',
@@ -43,6 +40,7 @@ describe('\'merge\' method', function() {
         priorityTest: 'RightDefaultValue',
         object: {
           test2: 'object.test2.ObjectValue',
+          test3: 'object.test3.ObjectValue',
         },
         array: [5, 6, 7],
       },
@@ -51,11 +49,11 @@ describe('\'merge\' method', function() {
 
   var response;
   before(function(done) {
-    response = merge({
-      sources: sources,
-      config: config,
-    }, results);
-    done();
+    merge(sources, results, function(err, result) {
+      if (err) {return done(err);}
+      response = result;
+      return done();
+    });
   });
 
   it('return a config', function(done) {
@@ -76,14 +74,15 @@ describe('\'merge\' method', function() {
   it('does fill all parameters (without conflicts) with different plugins results', function(done) {
     assert.equal(response.object.test1, 'object.test1.DefaultValue');
     assert.equal(response.object.test2, 'object.test2.ObjectValue');
+    assert.equal(response.object.test3, 'object.test3.ObjectValue');
     done();
   });
 
   it('does work with arrays as config parameter', function(done) {
     var array = [5, 6, 7];
     assert.equal(response.array.length, array.length);
-    for (var i = 0;i < config.array.length;i++) {
-      assert.equal(config.array[i], array[i]);
+    for (var i = 0;i < response.array.length;i++) {
+      assert.equal(response.array[i], array[i]);
     }
     done();
   });

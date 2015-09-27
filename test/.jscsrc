@@ -4,6 +4,6 @@
   "requireNamedUnassignedFunctions" : false,
   "requireBlocksOnNewline"          : false,
   "maximumLineLength"               : 200,
-  "maximumNumberOfLines"            : 400,
+  "maximumNumberOfLines"            : null,
   "maxErrors"                       : 200
 }

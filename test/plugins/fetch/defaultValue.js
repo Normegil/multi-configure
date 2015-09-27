@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('chai').assert;
-var h = require('../../resources/tools/helper');
 var plugin = require('../../../lib/plugins/fetch/defaultValue');
 
 var pluginName = 'DefaultValues';
@@ -17,8 +16,29 @@ describe('Plugin: ' + pluginName, function() {
     done();
   });
 
-  describe('\'load\' method', function() {
-    var config = h.config;
+  describe('.load())', function() {
+    var config = {
+      test: {
+        defaultValue: 'test.DefaultValue',
+      },
+      testNumber: {
+        defaultValue: 0,
+      },
+      priorityTest: {
+        defaultValue: 'WrongValue',
+      },
+      object: {
+        test1: {
+          defaultValue: 'object.test1.DefaultValue1',
+        },
+        test2: {
+          defaultValue: 'object.test2.DefaultValue2',
+        },
+      },
+      array: {
+        defaultValue: [1, 2, 3],
+      },
+    };
     var response;
     before(function(done) {
       plugin.load(

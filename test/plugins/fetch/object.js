@@ -25,37 +25,6 @@ describe('Plugin: ' + pluginName, function() {
   });
 
   describe('.load()', function() {
-    var config = {
-      test: {
-        defaultValue: null,
-      },
-      jsonField: {
-        defaultValue: null,
-      },
-      xmlField: {
-        defaultValue: null,
-      },
-      propertiesField: {
-        defaultValue: null,
-      },
-      yamlField: {
-        defaultValue: null,
-      },
-      testNumber: {
-        defaultValue: null,
-      },
-      object: {
-        test1: {
-          defaultValue: null,
-        },
-        test2: {
-          defaultValue: null,
-        },
-      },
-      array: {
-        defaultValue: null,
-      },
-    };
     var response;
     before(function(done) {
       pluginLoader.load(
@@ -68,7 +37,6 @@ describe('Plugin: ' + pluginName, function() {
           plugin.load(
             parsers,
             {
-              config: config,
               source: {
                 type: pluginName,
                 priority: 50,
@@ -132,7 +100,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [jsonParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -161,7 +128,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [xmlParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -190,7 +156,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [propertiesParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,
@@ -219,7 +184,6 @@ describe('Plugin: ' + pluginName, function() {
         plugin.load(
           [yamlParser],
           {
-            config: config,
             source: {
               type: pluginName,
               priority: 0,

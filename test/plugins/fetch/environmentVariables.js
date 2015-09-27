@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('chai').assert;
-var h = require('../../resources/tools/helper');
 var plugin = require('../../../lib/plugins/fetch/environmentVariables');
 
 var pluginName = 'EnvironmentVariables';
@@ -17,7 +16,29 @@ describe('Plugin: ' + pluginName, function() {
   });
 
   describe('.load()', function() {
-    var config = h.config;
+    var environmentVariablePrefix = 'CONFIG_MANAGER_TEST_';
+    var config = {
+      test: {
+        environmentVariable: environmentVariablePrefix + 'TEST',
+      },
+      testNumber: {
+        environmentVariable: environmentVariablePrefix + 'TEST_NUMBER',
+      },
+      priorityTest: {
+        environmentVariable: environmentVariablePrefix + 'PRIORITY_TEST',
+      },
+      object: {
+        test1: {
+          environmentVariable: environmentVariablePrefix + 'OBJECT_TEST1',
+        },
+        test2: {
+          environmentVariable: environmentVariablePrefix + 'OBJECT_TEST2',
+        },
+      },
+      array: {
+        environmentVariable: environmentVariablePrefix + 'ARRAY',
+      },
+    };
     var response;
     before(function(done) {
       plugin.load(

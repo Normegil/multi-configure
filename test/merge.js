@@ -13,8 +13,13 @@ describe('\'merge\' method', function() {
     {
       type: 'Objects',
       parser: 'RAW',
-      priority: 10,
       id: '3',
+    },
+    {
+      type: 'Objects',
+      parser: 'RAW',
+      priority: 10,
+      id: '5',
     },
   ];
   var results = [
@@ -34,6 +39,16 @@ describe('\'merge\' method', function() {
     {
       plugin: 'Objects',
       sourceID: '3',
+      config: {
+        object: {
+          test1: 'object.test1.ObjectValue',
+          test4: 'object.test4.ObjectValue',
+        },
+      },
+    },
+    {
+      plugin: 'Objects',
+      sourceID: '5',
       config: {
         test: 'test.ObjectValue',
         testNumber: 0,
@@ -75,6 +90,7 @@ describe('\'merge\' method', function() {
     assert.equal(response.object.test1, 'object.test1.DefaultValue');
     assert.equal(response.object.test2, 'object.test2.ObjectValue');
     assert.equal(response.object.test3, 'object.test3.ObjectValue');
+    assert.equal(response.object.test4, 'object.test4.ObjectValue');
     done();
   });
 

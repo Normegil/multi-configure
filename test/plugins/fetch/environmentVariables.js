@@ -17,7 +17,7 @@ describe('Plugin: ' + pluginName, function() {
 
   describe('.load()', function() {
     var environmentVariablePrefix = 'CONFIG_MANAGER_TEST_';
-    var config = {
+    var structure = {
       test: {
         environmentVariable: environmentVariablePrefix + 'TEST',
       },
@@ -43,7 +43,7 @@ describe('Plugin: ' + pluginName, function() {
     before(function(done) {
       plugin.load(
         {
-          config: config,
+          structure: structure,
           sources: {
             type: pluginName,
             priority: 20,

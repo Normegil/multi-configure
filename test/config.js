@@ -14,7 +14,7 @@ describe('Main', function() {
     it('return all default config values', function(done) {
       config(
         {
-          config: {
+          structure: {
             test: {
               defaultValue: 'DefaultTest',
             },
@@ -47,7 +47,7 @@ describe('Main', function() {
               },
             },
           ],
-          config: {
+          structure: {
             test: {
               defaultValue: 'DefaultTest',
             },

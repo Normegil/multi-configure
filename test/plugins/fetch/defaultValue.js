@@ -17,7 +17,7 @@ describe('Plugin: ' + pluginName, function() {
   });
 
   describe('.load())', function() {
-    var config = {
+    var structure = {
       test: {
         defaultValue: 'test.DefaultValue',
       },
@@ -43,7 +43,7 @@ describe('Plugin: ' + pluginName, function() {
     before(function(done) {
       plugin.load(
         {
-          config: config,
+          structure: structure,
           sources: {
             type: pluginName,
             priority: 0,
@@ -61,23 +61,23 @@ describe('Plugin: ' + pluginName, function() {
     });
 
     it('should load root nodes', function(done) {
-      assert.equal(response.config.test, config.test.defaultValue);
+      assert.equal(response.config.test, structure.test.defaultValue);
       done();
     });
 
     it('should return numbers', function(done) {
-      assert.equal(response.config.testNumber, config.testNumber.defaultValue);
+      assert.equal(response.config.testNumber, structure.testNumber.defaultValue);
       done();
     });
 
     it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, config.object.test1.defaultValue);
-      assert.equal(response.config.object.test2, config.object.test2.defaultValue);
+      assert.equal(response.config.object.test1, structure.object.test1.defaultValue);
+      assert.equal(response.config.object.test2, structure.object.test2.defaultValue);
       done();
     });
 
     it('should load array', function(done) {
-      assert.equal(response.config.array, config.array.defaultValue);
+      assert.equal(response.config.array, structure.array.defaultValue);
       done();
     });
   });

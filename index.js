@@ -14,7 +14,7 @@ module.exports = function config(options, callback) {
     getConfiguration(
       {
         plugins: pluginsLoaded,
-        config: options.config,
+        structure: options.structure,
         sources: options.sources,
       }, callback);
   });
@@ -42,7 +42,7 @@ function getConfiguration(options, callback) {
         return source.type === plugin.name;
       });
       plugin[0].load(
-        {plugins: options.plugins, source: source, config: options.config},
+        {plugins: options.plugins, source: source, structure: options.structure},
         function assignIDToResult(err, result) {
           if (err) {
             return asyncCallback(err);

@@ -35,8 +35,8 @@ describe('Plugin: ' + pluginName, function() {
         function onPluginLoaded(err, parsers) {
           if (err) {return done(err);}
           plugin.load(
-            parsers,
             {
+              plugins: parsers,
               source: {
                 type: pluginName,
                 priority: 0,
@@ -83,8 +83,7 @@ describe('Plugin: ' + pluginName, function() {
     });
 
     it('should handle unknown file type errors', function(done) {
-      plugin.load(
-        {}, {
+      plugin.load({
           source: {
             type: pluginName,
             path: resourceFolder + 'wrong.unknown',
@@ -102,8 +101,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [jsonParser],
           {
+            plugins: [jsonParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -124,7 +123,6 @@ describe('Plugin: ' + pluginName, function() {
 
       it('should handle parsing errors', function(done) {
         plugin.load(
-          {},
           {
             source: {
               type: pluginName,
@@ -145,8 +143,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [xmlParser],
           {
+            plugins: [xmlParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -167,7 +165,6 @@ describe('Plugin: ' + pluginName, function() {
 
       it('should handle parsing errors', function(done) {
         plugin.load(
-          {},
           {
             source: {
               type: pluginName,
@@ -188,8 +185,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [propertiesParser],
           {
+            plugins: [propertiesParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -213,8 +210,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [yamlParser],
           {
+            plugins: [yamlParser],
             source: {
               type: pluginName,
               priority: 0,

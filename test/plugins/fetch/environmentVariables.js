@@ -42,7 +42,6 @@ describe('Plugin: ' + pluginName, function() {
     var response;
     before(function(done) {
       plugin.load(
-        {},
         {
           config: config,
           sources: {

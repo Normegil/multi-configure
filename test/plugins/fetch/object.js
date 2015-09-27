@@ -35,8 +35,8 @@ describe('Plugin: ' + pluginName, function() {
         function onPluginLoaded(err, parsers) {
           if (err) {return done(err);}
           plugin.load(
-            parsers,
             {
+              plugins: parsers,
               source: {
                 type: pluginName,
                 priority: 50,
@@ -98,8 +98,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [jsonParser],
           {
+            plugins: [jsonParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -126,8 +126,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [xmlParser],
           {
+            plugins: [xmlParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -154,8 +154,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [propertiesParser],
           {
+            plugins: [propertiesParser],
             source: {
               type: pluginName,
               priority: 0,
@@ -182,8 +182,8 @@ describe('Plugin: ' + pluginName, function() {
       var response;
       before(function(done) {
         plugin.load(
-          [yamlParser],
           {
+            plugins: [yamlParser],
             source: {
               type: pluginName,
               priority: 0,

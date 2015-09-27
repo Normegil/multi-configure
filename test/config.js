@@ -13,7 +13,6 @@ describe('Main', function() {
 
     it('return all default config values', function(done) {
       config(
-        {},
         {
           config: {
             test: {
@@ -36,18 +35,18 @@ describe('Main', function() {
 
     it('load and use custom parser plugins', function(done) {
       config(
-        [
-          {
-            type: 'parser',
-            name: 'MyParser',
-            parse: function parse(source, callback) {
-              callback(null, {
-                test: this.name + 'Test',
-              });
-            },
-          },
-        ],
         {
+          plugins: [
+            {
+              type: 'parser',
+              name: 'MyParser',
+              parse: function parse(source, callback) {
+                callback(null, {
+                  test: this.name + 'Test',
+                });
+              },
+            },
+          ],
           config: {
             test: {
               defaultValue: 'DefaultTest',

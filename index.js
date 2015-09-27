@@ -6,12 +6,17 @@ var async = require('async');
 var merge = require('./lib/merge');
 var pluginManager = require('./lib/pluginLoader');
 
-module.exports = function config(plugins, options, callback) {
-  loadPlugins(plugins, function onLoad(err, plugins) {
+module.exports = function config(options, callback) {
+  loadPlugins(options.plugins, function onLoad(err, pluginsLoaded) {
     if (err) {
       return callback(err);
     }
-    getConfiguration(plugins, options, callback);
+    getConfiguration(
+      {
+        plugins: pluginsLoaded,
+        config: options.config,
+        sources: options.sources,
+      }, callback);
   });
 };
 
@@ -25,7 +30,7 @@ function loadPlugins(customPlugins, callback) {
     callback);
 }
 
-function getConfiguration(plugins, options, callback) {
+function getConfiguration(options, callback) {
   u.each(options.sources, function getUUID(source) {
     source.id = uuid.v4();
   });
@@ -33,12 +38,11 @@ function getConfiguration(plugins, options, callback) {
   async.map(
     options.sources,
     function loadConfig(source, asyncCallback) {
-      var plugin = u.filter(plugins, function getPlugin(plugin) {
+      var plugin = u.filter(options.plugins, function getPlugin(plugin) {
         return source.type === plugin.name;
       });
       plugin[0].load(
-        plugins,
-        {source: source, config: options.config},
+        {plugins: options.plugins, source: source, config: options.config},
         function assignIDToResult(err, result) {
           if (err) {
             return asyncCallback(err);

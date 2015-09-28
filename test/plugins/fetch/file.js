@@ -9,6 +9,7 @@ var jsonParser = require('./' + relativePathToParsers + 'json');
 var xmlParser = require('./' + relativePathToParsers + 'xml');
 var propertiesParser = require('./' + relativePathToParsers + 'properties');
 var yamlParser = require('./' + relativePathToParsers + 'yaml');
+var csonParser = require('./' + relativePathToParsers + 'cson');
 
 var pluginName = 'File';
 describe('Plugin: ' + pluginName, function() {
@@ -227,6 +228,31 @@ describe('Plugin: ' + pluginName, function() {
 
       it('should load YAML file', function(done) {
         assert.equal(response.config.yamlField, 'YamlValue');
+        done();
+      });
+    });
+
+    describe('- CSON Specific', function() {
+      var response;
+      before(function(done) {
+        plugin.load(
+          {
+            plugins: [csonParser],
+            source: {
+              type: pluginName,
+              priority: 0,
+              path: resourceFolder + 'config.cson',
+            },
+          },
+          function(err, result) {
+            if (err) {return done(err);}
+            response = result;
+            done();
+          });
+      });
+
+      it('should load CSON file', function(done) {
+        assert.equal(response.config.csonField, 'CsonValue');
         done();
       });
     });

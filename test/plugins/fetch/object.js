@@ -11,6 +11,7 @@ var jsonParser = require('./' + relativePathToParsers + 'json');
 var xmlParser = require('./' + relativePathToParsers + 'xml');
 var propertiesParser = require('./' + relativePathToParsers + 'properties');
 var yamlParser = require('./' + relativePathToParsers + 'yaml');
+var csonParser = require('./' + relativePathToParsers + 'cson');
 
 var pluginName = 'Object';
 describe('Plugin: ' + pluginName, function() {
@@ -200,6 +201,34 @@ describe('Plugin: ' + pluginName, function() {
 
       it('should load YAML', function(done) {
         assert.equal(response.config.yamlField, 'YamlValue');
+        done();
+      });
+    });
+
+    describe('- CSON format', function() {
+      var source = fs.readFileSync(resourceDirectoryName + 'config.cson');
+
+      var response;
+      before(function(done) {
+        plugin.load(
+          {
+            plugins: [csonParser],
+            source: {
+              type: pluginName,
+              priority: 0,
+              parser: 'CSON',
+              object: source,
+            },
+          },
+          function(err, result) {
+            if (err) {return done(err);}
+            response = result;
+            done();
+          });
+      });
+
+      it('should load CSON', function(done) {
+        assert.equal(response.config.csonField, 'CsonValue');
         done();
       });
     });

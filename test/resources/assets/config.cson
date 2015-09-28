@@ -1,0 +1,13 @@
+test: 'Test'
+csonField: 'CsonValue'
+
+testNumber: 2
+object:
+  test1: 'object.test1.value'
+  test2: 'object.test2.value'
+array: [
+  3,
+  4,
+  5
+],
+priorityTest: 'Something\'s wrong'

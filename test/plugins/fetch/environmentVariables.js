@@ -16,27 +16,28 @@ describe('Plugin: ' + pluginName, function() {
   });
 
   describe('.load()', function() {
-    var environmentVariablePrefix = 'CONFIG_MANAGER_TEST_';
     var structure = {
+      envVarPrefix: 'CONFIG_MANAGER_TEST_',
       test: {
-        environmentVariable: environmentVariablePrefix + 'TEST',
+        envVar: 'TEST',
       },
       testNumber: {
-        environmentVariable: environmentVariablePrefix + 'TEST_NUMBER',
+        envVar: 'TEST_NUMBER',
       },
       priorityTest: {
-        environmentVariable: environmentVariablePrefix + 'PRIORITY_TEST',
+        envVar: 'PRIORITY_TEST',
       },
       object: {
+        envVarPrefix: 'OBJECT_',
         test1: {
-          environmentVariable: environmentVariablePrefix + 'OBJECT_TEST1',
+          envVar: 'TEST1',
         },
         test2: {
-          environmentVariable: environmentVariablePrefix + 'OBJECT_TEST2',
+          envVar: 'TEST2',
         },
       },
       array: {
-        environmentVariable: environmentVariablePrefix + 'ARRAY',
+        envVar: 'ARRAY',
       },
     };
     var response;

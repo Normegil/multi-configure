@@ -3,6 +3,7 @@
 var u = require('underscore');
 var uuid = require('node-uuid');
 var async = require('async');
+var h = require('./lib/helper');
 var merge = require('./lib/merge');
 var pluginManager = require('./lib/pluginLoader');
 
@@ -37,24 +38,41 @@ function getConfiguration(options, callback) {
 
   async.map(
     options.sources,
-    function loadConfig(source, asyncCallback) {
-      var plugin = u.filter(options.plugins, function getPlugin(plugin) {
-        return source.type === plugin.name;
-      });
-      plugin[0].load(
-        {plugins: options.plugins, source: source, structure: options.structure},
-        function assignIDToResult(err, result) {
-          if (err) {
-            return asyncCallback(err);
-          }
-          result.sourceID = source.id;
-          asyncCallback(null, result);
-        });
+    function fromSource(source, asyncCallback) {
+      loadConfig({
+        source: source,
+        plugins: options.plugins,
+        structure: options.structure,
+      }, asyncCallback);
     },
     function onFinished(err, results) {
       if (err) {
         callback(err);
       }
       merge(options.sources, results, callback);
+    });
+}
+
+function loadConfig(options, callback) {
+  var plugins = options.plugins;
+  var source = options.source;
+  var plugin = u.filter(plugins, function getPlugin(plugin) {
+    return source.type === plugin.name;
+  });
+  plugin[0].load(
+    options,
+    function assignIDToResult(err, result) {
+      if (err) {
+        return callback(err);
+      }
+
+      if (h.exist(source.discriminator)) {
+        var newConfig = {};
+        newConfig[source.discriminator] = result.config;
+        result.config = newConfig;
+      }
+
+      result.sourceID = source.id;
+      callback(null, result);
     });
 }

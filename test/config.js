@@ -66,5 +66,34 @@ describe('Main', function() {
           done();
         });
     });
+
+    it('use discriminator if precised', function(done) {
+      config(
+        {
+          structure: {
+            test: {
+              defaultValue: 'DefaultTest',
+            },
+          },
+          sources: [
+            {
+              type: 'DefaultValues',
+              priority: 5,
+              discriminator: 'discriminator',
+            },
+            {
+              type: 'DefaultValues',
+              priority: 5,
+              discriminator: 'otherDiscriminator',
+            },
+          ],
+        },
+        function(err, config) {
+          if (err) { return done(err); }
+          assert.equal(config.discriminator.test, 'DefaultTest');
+          assert.equal(config.otherDiscriminator.test, 'DefaultTest');
+          done();
+        });
+    });
   });
 });

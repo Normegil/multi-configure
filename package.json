@@ -4,7 +4,7 @@
   "description": "Multiple-Source, Plugin-based configuration loader that let you use and prioritize different sources (Files, Objects, Environment variables, ...) to get one object resulting from the merge of all configs from these sources",
   "main": "index.js",
   "scripts": {
-    "mocha": "./mocha.sh",
+    "mocha": "node_modules/mocha/bin/mocha \"test/**/*.js\"",
     "lint": "node_modules/jshint/bin/jshint lib test && node_modules/jscs/bin/jscs -c test/.jscsrc test && node_modules/jscs/bin/jscs -c .jscsrc lib",
     "test": "npm run lint && npm run mocha",
     "push": "npm test && git push && git push --tags && npm publish"

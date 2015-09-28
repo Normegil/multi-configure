@@ -36,8 +36,10 @@ function getConfiguration(options, callback) {
     source.id = uuid.v4();
   });
 
+  var toProcess = filterByEnvironment(options.sources);
+
   async.map(
-    options.sources,
+    toProcess,
     function fromSource(source, asyncCallback) {
       loadConfig({
         source: source,
@@ -75,4 +77,20 @@ function loadConfig(options, callback) {
       result.sourceID = source.id;
       callback(null, result);
     });
+}
+
+function filterByEnvironment(sources) {
+  var toProcess = sources;
+  var environment = process.env.NODE_ENV;
+  if (h.exist(environment)) {
+    toProcess = u.filter(sources, function filterOnEnvironment(source) {
+      var env = source.environment;
+      if (!h.exist(env)) {
+        return true;
+      } else {
+        return environment === env;
+      }
+    });
+  }
+  return toProcess;
 }

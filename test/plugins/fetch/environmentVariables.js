@@ -24,9 +24,6 @@ describe('Plugin: ' + pluginName, function() {
       testNumber: {
         envVar: 'TEST_NUMBER',
       },
-      priorityTest: {
-        envVar: 'PRIORITY_TEST',
-      },
       object: {
         envVarPrefix: 'OBJECT_',
         test1: {
@@ -42,6 +39,12 @@ describe('Plugin: ' + pluginName, function() {
     };
     var response;
     before(function(done) {
+      process.env.CONFIG_MANAGER_TEST_TEST = 'test.EnvVar';
+      process.env.CONFIG_MANAGER_TEST_TEST_NUMBER = '2';
+      process.env.CONFIG_MANAGER_TEST_OBJECT_TEST1 = 'object.test1.EnvVar';
+      process.env.CONFIG_MANAGER_TEST_OBJECT_TEST2 = 'object.test2.EnvVar';
+      process.env.CONFIG_MANAGER_TEST_ARRAY = '[1, 2, 3]';
+
       plugin.load(
         {
           structure: structure,
@@ -57,6 +60,15 @@ describe('Plugin: ' + pluginName, function() {
         });
     });
 
+    after(function(done) {
+      delete process.env.CONFIG_MANAGER_TEST_TEST;
+      delete process.env.CONFIG_MANAGER_TEST_TEST_NUMBER;
+      delete process.env.CONFIG_MANAGER_TEST_OBJECT_TEST1;
+      delete process.env.CONFIG_MANAGER_TEST_OBJECT_TEST2;
+      delete process.env.CONFIG_MANAGER_TEST_ARRAY;
+      done();
+    });
+
     it('should return plugin name', function(done) {
       assert.equal(pluginName, response.plugin);
       done();
@@ -68,7 +80,7 @@ describe('Plugin: ' + pluginName, function() {
     });
 
     it('should load numbers', function(done) {
-      assert.equal(response.config.testNumber, 'testNumber.EnvVar');
+      assert.equal(response.config.testNumber, 2);
       done();
     });
 

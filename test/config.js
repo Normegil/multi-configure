@@ -1,6 +1,6 @@
 'use strict';
 
-var u = require('underscore');
+var _ = require('underscore');
 var assert = require('chai').assert;
 var config = require('../index.js');
 var rawParser = require('../lib/plugins/parser/raw');
@@ -8,7 +8,7 @@ var rawParser = require('../lib/plugins/parser/raw');
 describe('Main', function() {
   describe('.config()', function() {
     it('should be a function', function(done) {
-      assert.ok(u.isFunction(config), 'config is not a function');
+      assert.ok(_.isFunction(config), 'config is not a function');
       done();
     });
 

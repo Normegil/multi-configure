@@ -39,7 +39,7 @@ describe('Plugin: ' + name.toUpperCase() + ' Parser', function() {
   });
   it('should not parse wrong cson format', function(done) {
     var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.xml');
-    parser.parse(xmlContent, function(err) {;
+    parser.parse(xmlContent, function(err) {
       assert.notEqual(err, undefined);
       assert.notEqual(err, null);
       done();

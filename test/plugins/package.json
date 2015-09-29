@@ -1,0 +1,40 @@
+{
+  "name": "fakePackaJson",
+  "version": "0.1.0",
+  "description": "Used to test packages.json plugin",
+  "author": "Olivier Ory",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "jscs": "^2.1.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.2",
+    "sinon": "^1.16.1",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "async": "^1.4.2",
+    "cson": "^3.0.2",
+    "js-yaml": "^3.4.2",
+    "node-uuid": "^1.4.3",
+    "properties-parser": "^0.3.0",
+    "underscore": "^1.8.3",
+    "xml2js": "^0.4.12"
+  },
+  "config": {
+    "test": "Test",
+    "jsonField": "JsonValue",
+    "testNumber": 2,
+    "object": {
+        "test1": "object.test1.value",
+        "test2": "object.test2.value"
+    },
+    "array": [
+      3,
+      4,
+      5
+    ],
+    "priorityTest": "Something's wrong"
+  }
+}

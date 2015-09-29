@@ -1,6 +1,6 @@
 'use strict';
 
-var u = require('underscore');
+var _ = require('underscore');
 var assert = require('chai').assert;
 var pluginManager = require('../lib/pluginLoader');
 
@@ -13,14 +13,14 @@ describe('PluginLoader', function() {
     var folderPlugin = require(pathToPlugins + 'folder');
 
     it('should be a function', function(done) {
-      assert.ok(u.isFunction(pluginManager.loadAll), 'loadAll is not a function');
+      assert.ok(_.isFunction(pluginManager.loadAll), 'loadAll is not a function');
       done();
     });
 
     it('load plugins in file format', function(done) {
       pluginManager.loadAll({path: pathToPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.ok(u.contains(plugins, filePlugin), 'Should load plugin in file format');
+        assert.ok(_.contains(plugins, filePlugin), 'Should load plugin in file format');
         done();
       });
     });
@@ -28,7 +28,7 @@ describe('PluginLoader', function() {
     it('load plugins in folder format', function(done) {
       pluginManager.loadAll({path: pathToPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.ok(u.contains(plugins, folderPlugin), 'Should load plugin in folder format');
+        assert.ok(_.contains(plugins, folderPlugin), 'Should load plugin in folder format');
         done();
       });
     });
@@ -36,7 +36,7 @@ describe('PluginLoader', function() {
     it('doesn\'t load file that are not plugins', function(done) {
       pluginManager.loadAll({path: pathToPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.notOk(u.contains(plugins, notAPlugin), 'Shouldn\'t load file that are not a plugin');
+        assert.notOk(_.contains(plugins, notAPlugin), 'Shouldn\'t load file that are not a plugin');
         done();
       });
     });
@@ -51,10 +51,10 @@ describe('PluginLoader', function() {
         },
         function(err, plugins) {
           if (err) { return done(err); }
-          assert.ok(u.contains(plugins, filePlugin), 'Should load file plugin');
-          assert.ok(u.contains(plugins, wrongTypePlugin), 'Should load file plugin (Wrong type)');
-          assert.ok(u.contains(plugins, testPlugin), 'Should load object plugin (Test)');
-          assert.ok(u.contains(plugins, test1Plugin), 'Should load object plugin (Test1)');
+          assert.ok(_.contains(plugins, filePlugin), 'Should load file plugin');
+          assert.ok(_.contains(plugins, wrongTypePlugin), 'Should load file plugin (Wrong type)');
+          assert.ok(_.contains(plugins, testPlugin), 'Should load object plugin (Test)');
+          assert.ok(_.contains(plugins, test1Plugin), 'Should load object plugin (Test1)');
           done();
         });
     });
@@ -72,8 +72,8 @@ describe('PluginLoader', function() {
       var plugin = {type: 'right', name: 'Right'};
       pluginManager.loadAll({path: pathToPlugins, custom: [plugin]}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, filePlugin), 'Doesn\'t contains file plugin');
-        assert.ok(u.contains(plugins, plugin), 'Doesn\'t contains object plugin');
+        assert.ok(_.contains(plugins, filePlugin), 'Doesn\'t contains file plugin');
+        assert.ok(_.contains(plugins, plugin), 'Doesn\'t contains object plugin');
         done();
       });
     });
@@ -89,14 +89,14 @@ describe('PluginLoader', function() {
     var folderPlugin = require(pathToPlugins + 'folder');
 
     it('should be a function', function(done) {
-      assert.ok(u.isFunction(pluginManager.load), 'load is not a function');
+      assert.ok(_.isFunction(pluginManager.load), 'load is not a function');
       done();
     });
 
     it('load plugins in file format', function(done) {
       pluginManager.load({path: pathToPlugins}, {type: typeOfPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.ok(u.contains(plugins, filePlugin), 'Should load plugin in file format');
+        assert.ok(_.contains(plugins, filePlugin), 'Should load plugin in file format');
         done();
       });
     });
@@ -104,7 +104,7 @@ describe('PluginLoader', function() {
     it('load plugins in folder format', function(done) {
       pluginManager.load({path: pathToPlugins}, {type: typeOfPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.ok(u.contains(plugins, folderPlugin), 'Should load plugin in folder format');
+        assert.ok(_.contains(plugins, folderPlugin), 'Should load plugin in folder format');
         done();
       });
     });
@@ -112,7 +112,7 @@ describe('PluginLoader', function() {
     it('doesn\'t load file that are not plugins', function(done) {
       pluginManager.load({path: pathToPlugins}, {type: typeOfPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.notOk(u.contains(plugins, notAPlugin), 'Shouldn\'t load file that are not a plugin');
+        assert.notOk(_.contains(plugins, notAPlugin), 'Shouldn\'t load file that are not a plugin');
         done();
       });
     });
@@ -120,7 +120,7 @@ describe('PluginLoader', function() {
     it('doesn\'t load plugin of the wrong type', function(done) {
       pluginManager.load({path: pathToPlugins}, {type: typeOfPlugins}, function(err, plugins) {
         if (err) { return done(err); }
-        assert.notOk(u.contains(plugins, wrongTypePlugin), 'Shouldn\'t load plugins of the wrong type');
+        assert.notOk(_.contains(plugins, wrongTypePlugin), 'Shouldn\'t load plugins of the wrong type');
         done();
       });
     });
@@ -129,7 +129,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'right', name: 'Right'};
       pluginManager.load({custom: [plugin]}, {type: 'right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, plugin));
+        assert.ok(_.contains(plugins, plugin));
         done();
       });
     });
@@ -138,7 +138,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'wrong'};
       pluginManager.load({custom: [plugin]}, {type: 'right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.notOk(u.contains(plugins, plugin));
+        assert.notOk(_.contains(plugins, plugin));
         done();
       });
     });
@@ -156,8 +156,8 @@ describe('PluginLoader', function() {
       var plugin = {type: 'right', name: 'Right'};
       pluginManager.load({path: pathToPlugins, custom: [plugin]}, {type: 'right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, filePlugin));
-        assert.ok(u.contains(plugins, plugin));
+        assert.ok(_.contains(plugins, filePlugin));
+        assert.ok(_.contains(plugins, plugin));
         done();
       });
     });
@@ -166,7 +166,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'right', name: 'Right'};
       pluginManager.load({custom: [plugin]}, {name: 'Right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, plugin));
+        assert.ok(_.contains(plugins, plugin));
         done();
       });
     });
@@ -175,7 +175,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'wrong', name: 'Wrong'};
       pluginManager.load({custom: [plugin]}, {name: 'Right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.notOk(u.contains(plugins, plugin));
+        assert.notOk(_.contains(plugins, plugin));
         done();
       });
     });
@@ -184,7 +184,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'wrong', name: 'Right'};
       pluginManager.load({custom: [plugin]}, {name: 'Right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, plugin));
+        assert.ok(_.contains(plugins, plugin));
         done();
       });
     });
@@ -193,7 +193,7 @@ describe('PluginLoader', function() {
       var plugin = {type: 'right', name: 'Wrong'};
       pluginManager.load({custom: [plugin]}, {type: 'right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, plugin));
+        assert.ok(_.contains(plugins, plugin));
         done();
       });
     });
@@ -204,9 +204,9 @@ describe('PluginLoader', function() {
       var wrongPluginType = {type: 'wrong', name: 'Right'};
       pluginManager.load({custom: [rightPlugin, wrongPluginType, wrongPluginName]}, {type: 'right', name: 'Right'}, function(err, plugins) {
         if (err) {return done(err);}
-        assert.ok(u.contains(plugins, rightPlugin));
-        assert.notOk(u.contains(plugins, wrongPluginType));
-        assert.notOk(u.contains(plugins, wrongPluginName));
+        assert.ok(_.contains(plugins, rightPlugin));
+        assert.notOk(_.contains(plugins, wrongPluginType));
+        assert.notOk(_.contains(plugins, wrongPluginName));
         done();
       });
     });

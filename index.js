@@ -1,6 +1,6 @@
 'use strict';
 
-var u = require('underscore');
+var _ = require('underscore');
 var uuid = require('node-uuid');
 var async = require('async');
 var h = require('./lib/helper');
@@ -32,7 +32,7 @@ function loadPlugins(customPlugins, callback) {
 }
 
 function getConfiguration(options, callback) {
-  u.each(options.sources, function getUUID(source) {
+  _.each(options.sources, function getUUID(source) {
     source.id = uuid.v4();
   });
 
@@ -58,7 +58,7 @@ function getConfiguration(options, callback) {
 function loadConfig(options, callback) {
   var plugins = options.plugins;
   var source = options.source;
-  var plugin = u.filter(plugins, function getPlugin(plugin) {
+  var plugin = _.filter(plugins, function getPlugin(plugin) {
     return source.type === plugin.name;
   });
   plugin[0].load(
@@ -83,7 +83,7 @@ function filterByEnvironment(sources) {
   var toProcess = sources;
   var environment = process.env.NODE_ENV;
   if (h.exist(environment)) {
-    toProcess = u.filter(sources, function filterOnEnvironment(source) {
+    toProcess = _.filter(sources, function filterOnEnvironment(source) {
       var env = source.environment;
       if (!h.exist(env)) {
         return true;

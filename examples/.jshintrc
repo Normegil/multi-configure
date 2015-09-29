@@ -1,0 +1,9 @@
+{
+	"extends"						:	"../.jshintrc",
+
+	"curly"						:	false,
+	"maxstatements"		:	null,
+	"strict"					:	null,
+	"undef"						:	null,
+	"unused"					:	null
+}

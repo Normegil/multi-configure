@@ -22,6 +22,9 @@ describe('Plugin: ' + pluginName, function() {
     var expected = {
       test: 'test.cmdVal',
       testNumber: 42,
+      testBoolean: true,
+      testBoolean3: true,
+      testSeparatedBoolean: true,
       object: {
         test1: 'object.test1.cmdVal',
         test2: 'object.test2.cmdVal',
@@ -35,6 +38,18 @@ describe('Plugin: ' + pluginName, function() {
       },
       testNumber: {
         cmdOpts: 'testNumber',
+      },
+      testBoolean: {
+        cmdOpts: 'x',
+      },
+      testBoolean2: {
+        cmdOpts: 'y',
+      },
+      testBoolean3: {
+        cmdOpts: 'z',
+      },
+      testSeparatedBoolean: {
+        cmdOpts: 'u',
       },
       object: {
         test1: {
@@ -60,6 +75,8 @@ describe('Plugin: ' + pluginName, function() {
       process.argv = [
         'npm', 'test',
         '--test', 'test.cmdVal',
+        '-xz',
+        '-u',
         '--testNumber', '42',
         '--object-test1', 'object.test1.cmdVal',
         '--object-test2', 'object.test2.cmdVal',

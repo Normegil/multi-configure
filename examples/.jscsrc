@@ -1,0 +1,11 @@
+{
+  "preset"                          : "../.jscsrc",
+  "disallowAnonymousFunctions"      : false,
+  "requireNamedUnassignedFunctions" : false,
+  "requireBlocksOnNewline"          : false,
+  "maximumLineLength"               : null,
+  "maximumNumberOfLines"            : null,
+  "disallowMultipleLineBreaks"      : null,
+  "disallowMultipleSpaces"          : null,
+  "maxErrors"                       : 200
+}

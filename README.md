@@ -1,24 +1,31 @@
 # Multi-configure
-**Still a early version, API can still change**
-
-Small library (for NodeJs apps) built to manage the configuration of your application. It will let you define what your configuration looks like, which sources to use and even use your own plugins for non-forseen source types. Finally, you will be able to set priority between multiple sources to define which source your prefer over other ones. It currently support as sources:
+Small library (for NodeJs apps) built to manage the configuration of your application. It will let you define what your configuration looks like, which sources to use and even use your own plugins for non-forseen source types. Finally, you will be able to set priority for all those sources. It currently support as sources:
 - Default Values
 - Environment Variables
 - Files
 - Objects
+- package.json
+- Command Line arguments
 
-The file formats supported are (Both for the **file** plugin and the **object** plugin):
+The file formats supported are (Both for the *file* plugin and the *object* plugin):
 - JSON
 - XML
 - YAML
 - Java-based properties file
+- CSON
 
-Additionaly, you can give an javascript object to the **object** plugin using RAW as a parser.
+Additionally, you can give a javascript object to the *object* plugin, which will be treated as-is.
+
+## Features
+- Multiple sources (See all the predefined plugins and parsers)
+- Plugin system for easy extensibility and even more possibilities
+- Merge with priority settings
+- Discriminators for each sources
+- Support of NODE_ENV variable for selection of a set of sources to use (production, development, test, ...)
 
 ## Installation
 
-To install the library, just  use [npm](https://fr.wikipedia.org/wiki/Npm_%28logiciel%29):
-
+To install the library, just use [npm](https://fr.wikipedia.org/wiki/Npm_%28logiciel%29):
 `
 npm install multi-configure
 `
@@ -29,24 +36,29 @@ The library will send back a function to use like this (More [examples](https://
 ```javascript
 var config = require('multi-configure');
 config(
-  // Custom plugins
-  [
-    {
-      name: 'DBFetcher',
-      type: 'fetch',
-      load: function load(plugins, options, callback) {}
-    },
-    {,
-      name: 'MyFormatParser',
-      type: 'parser'
-      parse: function parse(source, callback) {}
-    },
-  ],
   {
+    // Custom plugins
+    plugins: [
+      {
+        name: 'DBFetcher',
+        type: 'fetch',
+        load: function load(plugins, options, callback) {}
+      },
+      {,
+        name: 'MyFormatParser',
+        type: 'parser'
+        parse: function parse(source, callback) {}
+      },
+    ],
     // Sources definitions
     sources: [
       {
         type: 'DefaultValues',
+        priority: 0,
+      },
+      {
+        type: 'package.json',
+        path: '../../package.json',
         priority: 0,
       },
       {
@@ -58,7 +70,6 @@ config(
       {
         type: 'File',
         path: __dirname + 'config.json'
-        priority: 20,
       },
       {
         type: 'Object',
@@ -72,48 +83,80 @@ config(
         type: 'EnvironmentVariables',
         priority: 40,
       },
+      {
+        type: 'Command Line',
+        priority: 100,
+      },
     ],
     // Configuration data & structure
-    config: {
+    structure: {
+      envVarPrefix: 'TEST_STRUCTURE_',
       test: {
         defaultValue: 'test',
-        environmentVariable: 'MYAPP_TEST',
+        envVar: 'TEST',
+        cmdOpts: ['t', 'test'],
       },
       object: {
+        envVarPrefix: 'OBJECT_',
         test1: {
           defaultValue: 'object.test1',
-          environmentVariable: 'MYAPP_OBJECT_TEST1',
+          envVar: 'OBJECT_TEST1',
+          cmdOpts: 'object-test1',
         },
         test2: {
           defaultValue: 'object.test2',
-          environmentVariable: 'MYAPP_OBJECT_TEST2',
+          envVar: 'TEST2',
+          cmdOpts: 'object-test2',
         },
       },
       array: {
         defaultValue: [1, 2, 3],
-        environmentVariable: 'MYAPP_ARRAY',
+        envVar: 'ARRAY',
+        cmdOpts: 'array',
+        isArray: true,
       },
     },
   },
   function callback(err, myConfig) {
-    // My Config contains your merged object
+    /** My Config contains your merged object config. Something like:
+     * {
+     *   test: 'test',
+     *   number: 2,
+     *   object: {
+     *     test1: 'test1',
+     *     test2: 'test2',
+     *   }
+     *   array: [1, 2, 3],
+     * }
+    */
   });
 ```
-You need to provide your custom plugins first, or an empty array if you don't have custom plugins.
+Everything is specified in an object, with the following fields:
 
-Then an object with two properties, `sources` and `config`.
+`plugins`: Optional. An array with your custom plugins. To see how to create and define a plugin, go to the [plugins](https://github.com/Normegil/multi-configure/wiki/Plugins) wiki page.
 
-- `sources`: define all the sources of configuration you need, with at least two mandatory field for each source: `type` which define plugin that will fetch your datas and `priority` to define which source to favorized over the others (Speaking of which, a null value is kept but an undefined value in a high priority source is ignored and will be replaced by lower priority values if needed).
+`sources`: Mandatory. define all the sources of configuration you need, with the following options:
+- `type`: Mandatory. Define plugin that will fetch your datas. The name should match exactly the name of the plugin you want to use.
+- `priority` Optional. Define priority to order the sources. The higher the number, the more prioritized a source is. Source without this fields will have the lowest priority (0).
+- `discriminator`: Optional. If present, it will define the name of the object acting as container for the source's configuration. You will access your configuration through `response.config.<discriminator>.blabla` instead of `response.config.blabla`. Done prior to merging, usefull to keep types of configuration (DB, Logging, ...) without property override.
+- `environment`: Optional. If not present, source will be used even if *NODE_ENV* is set. If the property exist, it will be loaded only if `environment` values exactly equals *NODE_ENV* value, or if *NODE_ENV* doesn't exist.
+- Custom fields: Some plugins will require other fields that could be precised here (Like a `path` for the *File* plugin).
 
-`config` define your configuration structure. You can create a tree of values, where configuration properties are only found on the leaves. Those properties are deteected by the mandatory `defaultValue` property, which can be null but not undefined. Next to it, you can pass custom field needed by other eeventual plugins.
+`structure`: Optional/Mandatory (Some  plugins use and require it, some don't). Define your configuration structure & settings. You can create a tree of values, which define what your final configuration will look like. Each leaves is an object containing properties used by plugins (Like `defaultValue` or `envVar`).
 
-Lastly, you have the classic NodeJS callback, starting with the `err` field in case of errors in the process, and the configuration as loaded by the library.
+Aside of the options, you have the classic NodeJS callback, starting with the `err` field in case of error in the process, and the configuration as loaded by the library.
 
 ### Plugins
 See [Plugins](https://github.com/Normegil/multi-configure/wiki/Plugins)
 
+### Defining a structure
+If a structure is defined, all the plugins that uses it will send back an object that looks like this structure. (But, for example, the *File* and *Object* don't use the structure at all). You need to define a hierarchy  of objects to represent your configuration. Once you have your hierarchy, check the [documentation of the plugins](https://github.com/Normegil/multi-configure/wiki/Plugins) you want to use to know how to define the properties of your structure.
+
 ### Merging and prioritize mecanism
-The merging operation happens when all the source are parsed and the configurations are loaded. Using `priority` fields from the sources, The merge will get the value from the most prioritized source (Higher number) and if the value is *undefined* (*null* values will be kept), it will got to the next source by order of priority. Once all values are filled or all configuration are used, the library will send back the object built.
+The merging operation happens when all the sources are parsed and the configurations are loaded. Using `priority` fields from the sources, the merge process will get the value from the most prioritized sources (Higher number) and if the value is *undefined* (*null* values will be kept), it will got to the next source by order of priority. Once all values are filled or all configuration are used, the library will send back the object built.
+
+## Enhancements, Issues and bugs
+Please report any enhancement, issue or bug you find while using this library to the github of the project. I will look at it and  fix it as soon as I can.
 
 ## Developers
 See [Developers](https://github.com/Normegil/multi-configure/wiki/Developers)

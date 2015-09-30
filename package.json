@@ -1,6 +1,6 @@
 {
   "name": "multi-configure",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Multiple-Source, Plugin-based configuration loader that let you use and prioritize different sources (Files, Objects, Environment variables, ...) to get one object resulting from the merge of all configs from these sources",
   "main": "index.js",
   "scripts": {

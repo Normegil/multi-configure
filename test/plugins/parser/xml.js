@@ -1,47 +1,51 @@
 'use strict';
 
 var fs = require('fs');
-var assert = require('chai').assert;
+var test = require('tape');
 var parser = require('../../../lib/plugins/parser/xml');
 
 var name = 'xml';
+var moduleName = 'Plugin: ' + name.toUpperCase() + ' Parser ';
+var resourceDirectory = __dirname + '/../../resources/assets/';
 
-describe('Plugin: XML Parser', function() {
-  var resourceDirectory = __dirname + '/../../resources/assets/';
+test(moduleName + 'should have name ' + name.toUpperCase(), function(assert) {
+  assert.equal(parser.name, name.toUpperCase());
+  assert.end();
+});
 
-  it('should have name ' + name.toUpperCase(), function(done) {
-    assert.equal(parser.name, name.toUpperCase());
-    done();
-  });
+test(moduleName + 'should be \'parser\' type', function(assert) {
+  assert.equal(parser.type, 'parser');
+  assert.end();
+});
 
-  it('should be \'parser\' type', function(done) {
-    assert.equal(parser.type, 'parser');
-    done();
-  });
-
-  it('should parse xml file', function(done) {
-    var xmlContent = fs.readFileSync(resourceDirectory + 'config.xml');
-    var expected = {
-      xmlField: 'XMLValue',
-      testNumber: 2,
-      priorityTest: 'Something\'s wrong',
-      array: [3, 4, 5],
-      object: {
-        test1: 'object.test1.XMLValue',
-        test2: 'object.test2.XMLValue',
-      },
-    };
-    parser.parse(xmlContent, function(err, object) {
-      assert.deepEqual(object, expected);
-      done();
+test(moduleName + 'should parse xml file', function(assert) {
+  var xmlContent = fs.readFileSync(resourceDirectory + 'config.xml');
+  var expected = {
+    xmlField: 'XMLValue',
+    testNumber: 2,
+    priorityTest: 'Something\'s wrong',
+    array: [3, 4, 5],
+    object: {
+      test1: 'object.test1.XMLValue',
+      test2: 'object.test2.XMLValue',
+    },
+  };
+  parser.parse(xmlContent)
+    .then(function testResult(result) {
+      assert.deepEqual(result, expected);
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
     });
-  });
-  it('should not parse wrong xml format', function(done) {
-    var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.xml');
-    parser.parse(xmlContent, function(err) {
+});
+test(moduleName + 'should not parse wrong xml format', function(assert) {
+  var xmlContent = fs.readFileSync(resourceDirectory + 'wrong.xml');
+  parser.parse(xmlContent)
+    .then(function testResult() {
+      assert.end();
+    }).catch(function onError(err) {
       assert.notEqual(err, undefined);
       assert.notEqual(err, null);
-      done();
+      assert.end();
     });
-  });
 });

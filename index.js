@@ -1,90 +1,75 @@
 'use strict';
 
-var _ = require('underscore');
-var uuid = require('node-uuid');
-var async = require('async');
-var h = require('./lib/helper');
-var merge = require('./lib/merge');
-var pluginManager = require('./lib/pluginLoader');
+let uuid = require('node-uuid');
+let h = require('./lib/helper');
+let merge = require('./lib/merge');
+let loadPlugins = require('plugin-system');
 
-module.exports = function config(options, callback) {
-  loadPlugins(options.plugins, function onLoad(err, pluginsLoaded) {
-    if (err) {
-      return callback(err);
-    }
-    getConfiguration(
-      {
-        plugins: pluginsLoaded,
-        structure: options.structure,
-        sources: options.sources,
-      }, callback);
+module.exports = function config(options) {
+  return new Promise(function config(resolve, reject) {
+    loadPlugins({
+      paths: [__dirname + '/lib/plugins/'],
+      custom: options.plugins,
+    })
+      .then(function config(plugins) {
+        return getConfiguration({
+            plugins: plugins,
+            structure: options.structure,
+            sources: options.sources,
+          });
+      }).then(resolve).catch(reject);
   });
 };
 
-function loadPlugins(customPlugins, callback) {
-  var pluginFolder = __dirname + '/lib/plugins/fetch/';
-  pluginManager.loadAll(
-    {
-      path: pluginFolder,
-      custom: customPlugins,
-    },
-    callback);
-}
-
-function getConfiguration(options, callback) {
-  _.each(options.sources, function getUUID(source) {
-    source.id = uuid.v4();
-  });
-
-  var toProcess = filterByEnvironment(options.sources);
-
-  async.map(
-    toProcess,
-    function fromSource(source, asyncCallback) {
-      loadConfig({
-        source: source,
-        plugins: options.plugins,
-        structure: options.structure,
-      }, asyncCallback);
-    },
-    function onFinished(err, results) {
-      if (err) {
-        callback(err);
-      }
-      merge(options.sources, results, callback);
+function getConfiguration(options) {
+  return new Promise(function getConfiguration(resolve, reject) {
+    options.sources.forEach(function getUUID(source) {
+      source.id = uuid.v4();
     });
+
+    let toProcess = filterByEnvironment(options.sources);
+
+    let promises = toProcess.map(function toPromise(source) {
+      return loadConfig(options.plugins, source, options.structure);
+    });
+
+    Promise.all(promises)
+      .then(function onFinished(results) {
+        return merge(options.sources, results);
+      })
+      .then(resolve)
+      .catch(reject);
+  });
 }
 
-function loadConfig(options, callback) {
-  var plugins = options.plugins;
-  var source = options.source;
-  var plugin = _.filter(plugins, function getPlugin(plugin) {
-    return source.type === plugin.name;
-  });
-  plugin[0].load(
-    options,
-    function assignIDToResult(err, result) {
-      if (err) {
-        return callback(err);
-      }
-
+function loadConfig(plugins, source, structure) {
+  return new Promise(function loadConfig(resolve, reject) {
+    let plugin = plugins.find(function getPlugin(plugin) {
+      return source.type === plugin.name;
+    });
+    plugin.load({
+      structure: structure,
+      plugins: plugins,
+      source: source,
+    }).then(function onLoaded(result) {
       if (h.exist(source.discriminator)) {
-        var newConfig = {};
+        let newConfig = {};
         newConfig[source.discriminator] = result.config;
         result.config = newConfig;
       }
 
       result.sourceID = source.id;
-      callback(null, result);
-    });
+      resolve(result);
+    }).catch(reject);
+  });
 }
 
 function filterByEnvironment(sources) {
-  var toProcess = sources;
-  var environment = process.env.NODE_ENV;
+  let toProcess = sources;
+  let environment = process.env.NODE_ENV;
   if (h.exist(environment)) {
-    toProcess = _.filter(sources, function filterOnEnvironment(source) {
-      var env = source.environment;
+    toProcess = sources.filter(function filterOnEnvironment(source) {
+      let env = source.environment;
       if (!h.exist(env)) {
         return true;
       } else {

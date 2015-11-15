@@ -12,9 +12,10 @@ config(
         path: __dirname + 'config.json', // extention determine which parser will be used
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     /** My Config contains your merged object config.
       Configuration will copy your data structure in the file given.
     */
+  }).catch(function onError(err) {
+
   });

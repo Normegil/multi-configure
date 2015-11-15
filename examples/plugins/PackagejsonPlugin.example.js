@@ -13,9 +13,10 @@ config(
         path: __dirname + '/package.json', // Path to your package.json
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     /** My Config contains your merged object config. Something like:
      Configuration as defined in the package.json
     */
+  }).catch(function onError(err) {
+
   });

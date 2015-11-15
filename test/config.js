@@ -1,173 +1,101 @@
 'use strict';
 
-var _ = require('underscore');
-var assert = require('chai').assert;
+var _ = require('lodash');
+var test = require('tape');
 var config = require('../index.js');
-var rawParser = require('../lib/plugins/parser/raw');
 
-describe('Main', function() {
-  describe('.config()', function() {
-    it('should be a function', function(done) {
-      assert.ok(_.isFunction(config), 'config is not a function');
-      done();
-    });
+var moduleName = 'Main';
+var functionName = 'config';
+test(moduleName + '.' + functionName + '() ' + 'should be a function', function(assert) {
+  assert.ok(_.isFunction(config), 'config is not a function');
+  assert.end();
+});
 
-    it('return all default config values', function(done) {
-      config(
-        {
-          structure: {
-            test: {
-              defaultValue: 'DefaultTest',
-            },
-          },
-          sources: [
-            {
-              type: 'DefaultValues',
-              priority: 5,
-            },
-          ],
+test(moduleName + '.' + functionName + '() ' + 'return all default config values', function(assert) {
+  config(
+    {
+      structure: {
+        test: {
+          defaultValue: 'DefaultTest',
         },
-        function(err, config) {
-          if (err) { return done(err); }
-          assert.equal(config.test, 'DefaultTest');
-          done();
-        });
-    });
-
-    it('load and use custom parser plugins', function(done) {
-      config(
+      },
+      sources: [
         {
-          plugins: [
-            {
-              type: 'parser',
-              name: 'MyParser',
-              parse: function parse(source, callback) {
-                callback(null, {
-                  test: this.name + 'Test',
-                });
-              },
-            },
-          ],
-          structure: {
-            test: {
-              defaultValue: 'DefaultTest',
-            },
-          },
-          sources: [
-            {
-              type: 'Object',
-              parser: 'MyParser',
-              priority: 0,
-            },
-          ],
+          type: 'DefaultValues',
+          priority: 5,
         },
-        function(err, config) {
-          if (err) { return done(err); }
-          assert.equal(config.test, 'MyParserTest');
-          done();
-        });
+      ],
+    }).then(function testResult(result) {
+      assert.equal(result.test, 'DefaultTest');
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
     });
+});
 
-    it('use discriminator if precised', function(done) {
-      config(
-        {
-          structure: {
-            test: {
-              defaultValue: 'DefaultTest',
-            },
-          },
-          sources: [
-            {
-              type: 'DefaultValues',
-              priority: 5,
-              discriminator: 'discriminator',
-            },
-            {
-              type: 'DefaultValues',
-              priority: 5,
-              discriminator: 'otherDiscriminator',
-            },
-          ],
-        },
-        function(err, config) {
-          if (err) { return done(err); }
-          assert.equal(config.discriminator.test, 'DefaultTest');
-          assert.equal(config.otherDiscriminator.test, 'DefaultTest');
-          done();
-        });
-    });
-
-    describe('- Environment', function() {
-      before(function(done) {
-        process.env.NODE_ENV = 'BLABLA';
-        done();
-      });
-
-      after(function(done) {
-        delete process.env.NODE_ENV;
-        done();
-      });
-
-      it('use environment settings', function(done) {
-        config(
-          {
-            plugins: [rawParser],
-            structure: {
-              test: {
-                defaultValue: 'DefaultTest',
-              },
-            },
-            sources: [
-              {
-                type: 'DefaultValues',
-                priority: 5,
-                environment: 'PRODUCTION',
-              },
-              {
-                type: 'Object',
-                priority: 5,
-                environment: 'BLABLA',
-                parser: 'RAW',
-                object: {
-                  testObject: 'Test',
-                },
-              },
-            ],
-          },
-          function(err, config) {
-            if (err) { return done(err); }
-            assert.equal(config.testObject, 'Test');
-            assert.equal(config.test, undefined);
-            done();
+test(moduleName + '.' + functionName + '() ' + 'load and use custom parser plugins', function(assert) {
+  config({
+    plugins: [
+      {
+        type: 'parser',
+        name: 'MyParser',
+        parse: function parse() {
+          return new Promise(function parse(resolve) {
+            resolve({
+              test: 'MyParserTest',
+            });
           });
-      });
-
-      it('ignore environment settings if none specified', function(done) {
-        config(
-          {
-            plugins: [rawParser],
-            structure: {
-              test: {
-                defaultValue: 'DefaultTest',
-              },
-            },
-            sources: [
-              {
-                type: 'Object',
-                priority: 5,
-                parser: 'RAW',
-                object: {
-                  testObject: 'Test',
-                },
-              },
-            ],
-          },
-          function(err, config) {
-            if (err) { return done(err); }
-            assert.equal(config.testObject, 'Test');
-            done();
-          });
-      });
+        },
+      },
+    ],
+    structure: {
+      test: {
+        defaultValue: 'DefaultTest',
+      },
+    },
+    sources: [
+      {
+        type: 'Object',
+        parser: 'MyParser',
+        priority: 0,
+      },
+    ],
+  }).then(function testResult(result) {
+      assert.equal(result.test, 'MyParserTest');
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
     });
-  });
+});
+
+test(moduleName + '.' + functionName + '() ' + 'use discriminator if precised', function(assert) {
+  config(
+    {
+      structure: {
+        test: {
+          defaultValue: 'DefaultTest',
+        },
+      },
+      sources: [
+        {
+          type: 'DefaultValues',
+          priority: 5,
+          discriminator: 'discriminator',
+        },
+        {
+          type: 'DefaultValues',
+          priority: 5,
+          discriminator: 'otherDiscriminator',
+        },
+      ],
+    }).then(function testResult(result) {
+      assert.equal(result.discriminator.test, 'DefaultTest');
+      assert.equal(result.otherDiscriminator.test, 'DefaultTest');
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
 });

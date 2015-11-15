@@ -42,12 +42,12 @@ config(
       {
         name: 'DBFetcher',
         type: 'fetch',
-        load: function load(plugins, options, callback) {}
+        load: function load(plugins, options) {}
       },
       {,
         name: 'MyFormatParser',
         type: 'parser'
-        parse: function parse(source, callback) {}
+        parse: function parse(source) {}
       },
     ],
     // Sources definitions
@@ -116,8 +116,7 @@ config(
         isArray: true,
       },
     },
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     /** My Config contains your merged object config. Something like:
      * {
      *   test: 'test',
@@ -129,6 +128,8 @@ config(
      *   array: [1, 2, 3],
      * }
     */
+  }).catch(function onError(err) {
+
   });
 ```
 Everything is specified in an object, with the following fields:
@@ -144,7 +145,7 @@ Everything is specified in an object, with the following fields:
 
 `structure`: Optional/Mandatory (Some  plugins use and require it, some don't). Define your configuration structure & settings. You can create a tree of values, which define what your final configuration will look like. Each leaves is an object containing properties used by plugins (Like `defaultValue` or `envVar`).
 
-Aside of the options, you have the classic NodeJS callback, starting with the `err` field in case of error in the process, and the configuration as loaded by the library.
+As return, you get a Promise.
 
 ### Plugins
 See [Plugins](https://github.com/Normegil/multi-configure/wiki/Plugins)

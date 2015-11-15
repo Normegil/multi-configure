@@ -32,8 +32,7 @@ config(
         isArray: true,  // Define if the config value can potentially be an array
       },
     },
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
 
     // CMD: node program.js -x --test value --object-test1 test1 -a option1 --array option2 -a option3
@@ -59,4 +58,6 @@ config(
         'option1',
       ],
     };
+  }).catch(function onError(err) {
+
   });

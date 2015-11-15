@@ -4,9 +4,9 @@
   "description": "Multiple-Source, Plugin-based configuration loader that let you use and prioritize different sources (Files, Objects, Environment variables, ...) to get one object resulting from the merge of all configs from these sources",
   "main": "index.js",
   "scripts": {
-    "mocha": "node_modules/mocha/bin/mocha \"test/**/*.js\"",
+    "unit-test": "node_modules/tape/bin/tape \"test/**/*.js\" | node_modules/faucet/bin/cmd.js",
     "lint": "node_modules/jshint/bin/jshint lib test && node_modules/jscs/bin/jscs -c test/.jscsrc test && node_modules/jscs/bin/jscs -c .jscsrc lib",
-    "test": "npm run lint && npm run mocha",
+    "test": "npm run lint && npm run unit-test",
     "push": "npm test && git push && git push --tags && npm publish"
   },
   "repository": {
@@ -29,22 +29,20 @@
   "author": "Olivier Ory",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
+    "faucet": "0.0.1",
     "jscs": "^2.1.1",
     "jshint": "^2.8.0",
-    "mocha": "^2.3.2",
-    "sinon": "^1.16.1",
-    "sinon-chai": "^2.8.0"
+    "tape": "^4.2.2"
   },
   "dependencies": {
-    "async": "^1.4.2",
     "cson": "^3.0.2",
     "js-yaml": "^3.4.2",
+    "lodash": "^3.10.1",
     "minimist": "^1.2.0",
     "node-uuid": "^1.4.3",
+    "path-explorer": "^0.2.0",
+    "plugin-system": "^0.2.0",
     "properties-parser": "^0.3.0",
-    "underscore": "^1.8.3",
     "xml2js": "^0.4.12"
   }
 }

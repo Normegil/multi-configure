@@ -35,8 +35,7 @@ config(
         discriminator: 'DB',
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess() {
     // My Config contains your merged object config. Something like:
     myConfig = {
       DB: {
@@ -46,4 +45,6 @@ config(
         test: 'test2',
       },
     };
+  }).catch(function onError(err) {
+
   });

@@ -10,8 +10,7 @@ config(
     sources: [],
     // Configuration data & structure
     structure: {},
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess() {
     /** My Config contains your merged object config. Something like:
      * {
      *   test: 'test',
@@ -23,4 +22,6 @@ config(
      *   array: [1, 2, 3],
      * }
     */
+  }).catch(function onError(err) {
+
   });

@@ -1,105 +1,127 @@
 'use strict';
 
-var assert = require('chai').assert;
-var merge = require('../lib/merge');
+let test = require('tape');
+let merge = require('../lib/merge');
 
-describe('\'merge\' method', function() {
-  var sources = [
-    {
-      type: 'DefaultValues',
-      priority: 0,
-      id: '1',
+var moduleName = '.merge() ';
+let sources = [
+  {
+    type: 'DefaultValues',
+    priority: 0,
+    id: '1',
+  },
+  {
+    type: 'Objects',
+    parser: 'RAW',
+    id: '3',
+  },
+  {
+    type: 'Objects',
+    parser: 'RAW',
+    priority: 10,
+    id: '5',
+  },
+];
+let results = [
+  {
+    type: 'DefaultValues',
+    sourceID: '1',
+    config: {
+      test: 'test.DefaultValue',
+      testNumber: 0,
+      priorityTest: 'WrongDefaultValue',
+      object: {
+        test1: 'object.test1.DefaultValue',
+      },
+      array: [5, 6, 7],
     },
-    {
-      type: 'Objects',
-      parser: 'RAW',
-      id: '3',
-    },
-    {
-      type: 'Objects',
-      parser: 'RAW',
-      priority: 10,
-      id: '5',
-    },
-  ];
-  var results = [
-    {
-      type: 'DefaultValues',
-      sourceID: '1',
-      config: {
-        test: 'test.DefaultValue',
-        testNumber: 0,
-        priorityTest: 'WrongDefaultValue',
-        object: {
-          test1: 'object.test1.DefaultValue',
-        },
-        array: [5, 6, 7],
+  },
+  {
+    plugin: 'Objects',
+    sourceID: '3',
+    config: {
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test4: 'object.test4.ObjectValue',
       },
     },
-    {
-      plugin: 'Objects',
-      sourceID: '3',
-      config: {
-        object: {
-          test1: 'object.test1.ObjectValue',
-          test4: 'object.test4.ObjectValue',
-        },
+  },
+  {
+    plugin: 'Objects',
+    sourceID: '5',
+    config: {
+      test: 'test.ObjectValue',
+      testNumber: 0,
+      priorityTest: 'RightDefaultValue',
+      object: {
+        test2: 'object.test2.ObjectValue',
+        test3: 'object.test3.ObjectValue',
       },
+      array: [5, 6, 7],
     },
-    {
-      plugin: 'Objects',
-      sourceID: '5',
-      config: {
-        test: 'test.ObjectValue',
-        testNumber: 0,
-        priorityTest: 'RightDefaultValue',
-        object: {
-          test2: 'object.test2.ObjectValue',
-          test3: 'object.test3.ObjectValue',
-        },
-        array: [5, 6, 7],
-      },
-    },
-  ];
+  },
+];
 
-  var response;
-  before(function(done) {
-    merge(sources, results, function(err, result) {
-      if (err) {return done(err);}
-      response = result;
-      return done();
+test(moduleName + 'return a config', function(assert) {
+  merge(sources, results)
+    .then(function testResult(result) {
+      assert.equal(result.test, 'test.ObjectValue');
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
     });
-  });
+});
 
-  it('return a config', function(done) {
-    assert.equal(response.test, 'test.ObjectValue');
-    done();
-  });
+test(moduleName + 'can parse sub levels', function(assert) {
+  merge(sources, results)
+    .then(function testResult(result) {
+      assert.equal(result.object.test1, 'object.test1.DefaultValue');
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
 
-  it('can parse sub levels', function(done) {
-    assert.equal(response.object.test1, 'object.test1.DefaultValue');
-    done();
-  });
+test(moduleName + 'can prioritize sources', function(assert) {
+  merge(sources, results)
+    .then(function testResult(result) {
+      assert.equal(result.priorityTest, 'RightDefaultValue');
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
 
-  it('can prioritize sources', function(done) {
-    assert.equal(response.priorityTest, 'RightDefaultValue');
-    done();
-  });
+test(moduleName + 'does fill all parameters (without conflicts) with different plugins results', function(assert) {
+  merge(sources, results)
+    .then(function testResult(result) {
+      assert.equal(result.object.test1, 'object.test1.DefaultValue');
+      assert.equal(result.object.test2, 'object.test2.ObjectValue');
+      assert.equal(result.object.test3, 'object.test3.ObjectValue');
+      assert.equal(result.object.test4, 'object.test4.ObjectValue');
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
 
-  it('does fill all parameters (without conflicts) with different plugins results', function(done) {
-    assert.equal(response.object.test1, 'object.test1.DefaultValue');
-    assert.equal(response.object.test2, 'object.test2.ObjectValue');
-    assert.equal(response.object.test3, 'object.test3.ObjectValue');
-    assert.equal(response.object.test4, 'object.test4.ObjectValue');
-    done();
-  });
-
-  it('does work with arrays as config parameter', function(done) {
-    var array = [5, 6, 7];
-    assert.equal(response.array.length, array.length);
-    for (var i = 0;i < response.array.length;i++) {
-      assert.equal(response.array[i], array[i]);
-    }
-    done();
-  });
+test(moduleName + 'does work with arrays as config parameter', function(assert) {
+  merge(sources, results)
+    .then(function testResult(result) {
+      let array = [5, 6, 7];
+      assert.deepEqual(result.array, array);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
 });

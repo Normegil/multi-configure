@@ -1,84 +1,113 @@
 'use strict';
 
-var assert = require('chai').assert;
-var plugin = require('../../../lib/plugins/fetch/defaultValue');
+var test = require('tape');
+var pathToLib = '../../../lib/';
+var plugin = require(pathToLib + 'plugins/fetch/defaultValue');
 
 var pluginName = 'DefaultValues';
-
-describe('Plugin: ' + pluginName, function() {
-  it('should be named \'' + pluginName + '\'', function(done) {
-    assert.equal(pluginName, plugin.name);
-    done();
-  });
-
-  it('should be a \'fetch\' type plugin', function(done) {
-    assert.equal('fetch', plugin.type);
-    done();
-  });
-
-  describe('.load())', function() {
-    var structure = {
-      test: {
-        defaultValue: 'test.DefaultValue',
-      },
-      testNumber: {
-        defaultValue: 0,
-      },
-      priorityTest: {
-        defaultValue: 'WrongValue',
-      },
-      object: {
-        test1: {
-          defaultValue: 'object.test1.DefaultValue1',
-        },
-        test2: {
-          defaultValue: 'object.test2.DefaultValue2',
-        },
-      },
-      array: {
-        defaultValue: [1, 2, 3],
-      },
-    };
-    var response;
-    before(function(done) {
-      plugin.load(
-        {
-          structure: structure,
-          sources: {
-            type: pluginName,
-            priority: 0,
-          },
-        }, function(err, result) {
-          if (err) {return done(err);}
-          response = result;
-          done();
-        });
-    });
-
-    it('should return plugin name', function(done) {
-      assert.equal(pluginName, response.plugin);
-      done();
-    });
-
-    it('should load root nodes', function(done) {
-      assert.equal(response.config.test, structure.test.defaultValue);
-      done();
-    });
-
-    it('should return numbers', function(done) {
-      assert.equal(response.config.testNumber, structure.testNumber.defaultValue);
-      done();
-    });
-
-    it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, structure.object.test1.defaultValue);
-      assert.equal(response.config.object.test2, structure.object.test2.defaultValue);
-      done();
-    });
-
-    it('should load array', function(done) {
-      assert.equal(response.config.array, structure.array.defaultValue);
-      done();
-    });
-  });
+var moduleName = 'Plugin: ' + pluginName + ' ';
+test(moduleName + 'should be named \'' + pluginName + '\'', function(assert) {
+  assert.equal(pluginName, plugin.name);
+  assert.end();
 });
+
+test(moduleName + 'should be a \'fetch\' type plugin', function(assert) {
+  assert.equal('fetch', plugin.type);
+  assert.end();
+});
+
+var structure = {
+  test: {
+    defaultValue: 'test.DefaultValue',
+  },
+  testNumber: {
+    defaultValue: 0,
+  },
+  priorityTest: {
+    defaultValue: 'WrongValue',
+  },
+  object: {
+    test1: {
+      defaultValue: 'object.test1.DefaultValue1',
+    },
+    test2: {
+      defaultValue: 'object.test2.DefaultValue2',
+    },
+  },
+  array: {
+    defaultValue: [1, 2, 3],
+  },
+};
+
+test(moduleName + 'should return plugin name', function(assert) {
+  callPlugin(structure)
+    .then(function onSuccess(result) {
+      assert.equal(pluginName, result.plugin);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should load root nodes', function(assert) {
+  callPlugin(structure)
+    .then(function onSuccess(result) {
+      assert.equal(result.config.test, structure.test.defaultValue);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should return numbers', function(assert) {
+  callPlugin(structure)
+    .then(function onSuccess(result) {
+      assert.equal(result.config.testNumber, structure.testNumber.defaultValue);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should load objects', function(assert) {
+  callPlugin(structure)
+    .then(function onSuccess(result) {
+      assert.equal(result.config.object.test1, structure.object.test1.defaultValue);
+      assert.equal(result.config.object.test2, structure.object.test2.defaultValue);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should load array', function(assert) {
+  callPlugin(structure)
+    .then(function onSuccess(result) {
+      assert.equal(result.config.array, structure.array.defaultValue);
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+function callPlugin(structure) {
+  return new Promise(function(resolve, reject) {
+    plugin.load({
+      structure: structure,
+      sources: {
+        type: pluginName,
+        priority: 0,
+      },
+    }).then(resolve).catch(reject);
+  });
+}

@@ -40,8 +40,7 @@ config(
         priority: 4,
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(result) {
     // My Config contains your merged object config. Something like:
 
     // NODE_ENV not set - Every source is used
@@ -63,4 +62,6 @@ config(
     var prodConfig = {
       test: 3,
     };
+  }).catch(function onError(err) {
+
   });

@@ -1,6 +1,7 @@
 {
   "preset"                          : "../.jscsrc",
   "disallowAnonymousFunctions"      : false,
+  "disallowPaddingNewlinesInBlocks" : false,
   "requireNamedUnassignedFunctions" : false,
   "requireBlocksOnNewline"          : false,
   "maximumLineLength"               : null,

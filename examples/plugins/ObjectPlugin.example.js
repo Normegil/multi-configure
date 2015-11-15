@@ -20,10 +20,11 @@ config(
         priority: 1,
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
     myConfig = {
       test: 'value',
     };
+  }).catch(function onError(err) {
+
   });

@@ -1,67 +1,76 @@
 'use strict';
 
-var assert = require('chai').assert;
+var test = require('tape');
 var h = require('../../lib/helper');
 
-describe('Helper', function() {
-  describe('.exist()', function() {
-    it('should be false if undefined', function() {
-      assert.equal(h.exist(undefined), false);
-    });
+var moduleName = 'Helper';
+var existFunctionName = '.exist() ';
+test(moduleName + existFunctionName + 'should be false if undefined', function(assert) {
+  assert.equal(h.exist(undefined), false);
+  assert.end();
+});
 
-    it('should be false if null', function() {
-      assert.equal(h.exist(null), false);
-    });
+test(moduleName + existFunctionName + 'should be false if null', function(assert) {
+  assert.equal(h.exist(null), false);
+  assert.end();
+});
 
-    it('should be true if array', function() {
-      assert.equal(h.exist([]), true);
-    });
+test(moduleName + existFunctionName + 'should be true if array', function(assert) {
+  assert.equal(h.exist([]), true);
+  assert.end();
+});
 
-    it('should be false if object', function() {
-      assert.equal(h.exist({}), true);
-    });
+test(moduleName + existFunctionName + 'should be false if object', function(assert) {
+  assert.equal(h.exist({}), true);
+  assert.end();
+});
 
-    it('should be false if value', function() {
-      assert.equal(h.exist(0), true);
-    });
-  });
+test(moduleName + existFunctionName + 'should be false if value', function(assert) {
+  assert.equal(h.exist(0), true);
+  assert.end();
+});
 
-  describe('.isObject()', function() {
-    it('should be true when object', function() {
-      assert.ok(h.isObject({
-        test: 'Test',
-      }));
-    });
+var isObjectFunctionName = '.isObject() ';
+test(moduleName + isObjectFunctionName + 'should be true when object', function(assert) {
+  assert.ok(h.isObject({
+    test: 'Test',
+  }));
+  assert.end();
+});
 
-    it('should be true when empty object', function() {
-      assert.ok(h.isObject({}));
-    });
+test(moduleName + isObjectFunctionName + 'should be true when empty object', function(assert) {
+  assert.ok(h.isObject({}));
+  assert.end();
+});
 
-    it('should be true when nested object', function() {
-      assert.ok(h.isObject({
-        object1: {
-          test: 'Test',
-        },
-        object2: {
-          test2: 2,
-        },
-      }));
-    });
+test(moduleName + isObjectFunctionName + 'should be true when nested object', function(assert) {
+  assert.ok(h.isObject({
+    object1: {
+      test: 'Test',
+    },
+    object2: {
+      test2: 2,
+    },
+  }));
+  assert.end();
+});
 
-    it('should be false when number', function() {
-      assert.notOk(h.isObject(2));
-    });
+test(moduleName + isObjectFunctionName + 'should be false when number', function(assert) {
+  assert.notOk(h.isObject(2));
+  assert.end();
+});
 
-    it('should be false when strings', function() {
-      assert.notOk(h.isObject('Test'));
-    });
+test(moduleName + isObjectFunctionName + 'should be false when strings', function(assert) {
+  assert.notOk(h.isObject('Test'));
+  assert.end();
+});
 
-    it('should be false when function', function() {
-      assert.notOk(h.isObject(function test() {}));
-    });
+test(moduleName + isObjectFunctionName + 'should be false when function', function(assert) {
+  assert.notOk(h.isObject(function test() {}));
+  assert.end();
+});
 
-    it('should be false when array', function() {
-      assert.notOk(h.isObject([1, 2, 3]));
-    });
-  });
+test(moduleName + isObjectFunctionName + 'should be false when array', function(assert) {
+  assert.notOk(h.isObject([1, 2, 3]));
+  assert.end();
 });

@@ -1,12 +1,12 @@
 'use strict';
 
-var relativePathToPlugins = '../../../lib/plugins/';
+var pathToLib = '../../../lib/';
+var relativePathToPlugins = pathToLib + 'plugins/';
 var relativePathToParsers = relativePathToPlugins + 'parser/';
 
 var fs = require('fs');
-var assert = require('chai').assert;
+var test = require('tape');
 var plugin = require('./' + relativePathToPlugins + 'fetch/object');
-var pluginLoader = require('../../../lib/pluginLoader');
 var jsonParser = require('./' + relativePathToParsers + 'json');
 var xmlParser = require('./' + relativePathToParsers + 'xml');
 var propertiesParser = require('./' + relativePathToParsers + 'properties');
@@ -14,223 +14,212 @@ var yamlParser = require('./' + relativePathToParsers + 'yaml');
 var csonParser = require('./' + relativePathToParsers + 'cson');
 
 var pluginName = 'Object';
-describe('Plugin: ' + pluginName, function() {
-  it('should be named \'' + pluginName + '\'', function(done) {
-    assert.equal(pluginName, plugin.name);
-    done();
-  });
+var moduleName = 'Plugin: ' + pluginName + ' ';
+test(moduleName + 'should be named \'' + pluginName + '\'', function(assert) {
+  assert.equal(pluginName, plugin.name);
+  assert.end();
+});
 
-  it('should be a \'fetch\' type plugin', function(done) {
-    assert.equal('fetch', plugin.type);
-    done();
-  });
+test(moduleName + 'should be a \'fetch\' type plugin', function(assert) {
+  assert.equal('fetch', plugin.type);
+  assert.end();
+});
 
-  describe('.load()', function() {
-    var response;
-    before(function(done) {
-      pluginLoader.load(
-        {path: __dirname + '/' + relativePathToParsers},
-        {
-          type: 'parser',
-        },
-        function onPluginLoaded(err, parsers) {
-          if (err) {return done(err);}
-          plugin.load(
-            {
-              plugins: parsers,
-              source: {
-                type: pluginName,
-                priority: 50,
-                parser: 'RAW',
-                object: {
-                  test: 'test.ObjectValue',
-                  testNumber: 5,
-                  object: {
-                    test1: 'object.test1.ObjectValue',
-                    test2: 'object.test2.ObjectValue',
-                  },
-                  array: [5, 6, 7],
-                },
-              },
-            },
-            function(err, result) {
-              if (err) {return done(err);}
-              response = result;
-              done();
-            });
-        }
-      );
-    });
-
-    it('should return plugin name', function(done) {
-      assert.equal(response.plugin, pluginName);
-      done();
-    });
-
-    it('should load root nodes', function(done) {
-      assert.equal(response.config.test, 'test.ObjectValue');
-      done();
-    });
-
-    it('should load numbers', function(done) {
-      assert.equal(response.config.testNumber, 5);
-      done();
-    });
-
-    it('should load objects', function(done) {
-      assert.equal(response.config.object.test1, 'object.test1.ObjectValue');
-      assert.equal(response.config.object.test2, 'object.test2.ObjectValue');
-      done();
-    });
-
-    it('should load array', function(done) {
-      var array = [5, 6, 7];
-      assert.equal(response.config.array.length, array.length);
-      for (var i = 0;i < response.config.array.length;i++) {
-        assert.equal(response.config.array[i], array[i]);
-      }
-      done();
-    });
-
-    var resourceDirectoryName = __dirname + '/../../resources/assets/';
-    describe('- JSON format', function() {
-      var source = fs.readFileSync(resourceDirectoryName + 'config.json');
-
-      var response;
-      before(function(done) {
-        plugin.load(
-          {
-            plugins: [jsonParser],
-            source: {
-              type: pluginName,
-              priority: 0,
-              parser: 'JSON',
-              object: source,
-            },
-          },
-          function(err, result) {
-            if (err) {return done(err);}
-            response = result;
-            done();
-          });
-      });
-
-      it('should load JSON', function(done) {
-        assert.equal(response.config.jsonField, 'JsonValue');
-        done();
-      });
-    });
-
-    describe('- XML format', function() {
-      var source = fs.readFileSync(resourceDirectoryName + 'config.xml');
-
-      var response;
-      before(function(done) {
-        plugin.load(
-          {
-            plugins: [xmlParser],
-            source: {
-              type: pluginName,
-              priority: 0,
-              parser: 'XML',
-              object: source,
-            },
-          },
-          function(err, result) {
-            if (err) {return done(err);}
-            response = result;
-            done();
-          });
-      });
-
-      it('should load XML', function(done) {
-        assert.equal(response.config.xmlField, 'XMLValue');
-        done();
-      });
-    });
-
-    describe('- Properties format', function() {
-      var source = fs.readFileSync(resourceDirectoryName + 'config.properties');
-
-      var response;
-      before(function(done) {
-        plugin.load(
-          {
-            plugins: [propertiesParser],
-            source: {
-              type: pluginName,
-              priority: 0,
-              parser: 'Properties',
-              object: source,
-            },
-          },
-          function(err, result) {
-            if (err) {return done(err);}
-            response = result;
-            done();
-          });
-      });
-
-      it('should load Properties', function(done) {
-        assert.equal(response.config.propertiesField, 'PropertiesValue');
-        done();
-      });
-    });
-
-    describe('- YAML format', function() {
-      var source = fs.readFileSync(resourceDirectoryName + 'config.yaml');
-
-      var response;
-      before(function(done) {
-        plugin.load(
-          {
-            plugins: [yamlParser],
-            source: {
-              type: pluginName,
-              priority: 0,
-              parser: 'YAML',
-              object: source,
-            },
-          },
-          function(err, result) {
-            if (err) {return done(err);}
-            response = result;
-            done();
-          });
-      });
-
-      it('should load YAML', function(done) {
-        assert.equal(response.config.yamlField, 'YamlValue');
-        done();
-      });
-    });
-
-    describe('- CSON format', function() {
-      var source = fs.readFileSync(resourceDirectoryName + 'config.cson');
-
-      var response;
-      before(function(done) {
-        plugin.load(
-          {
-            plugins: [csonParser],
-            source: {
-              type: pluginName,
-              priority: 0,
-              parser: 'CSON',
-              object: source,
-            },
-          },
-          function(err, result) {
-            if (err) {return done(err);}
-            response = result;
-            done();
-          });
-      });
-
-      it('should load CSON', function(done) {
-        assert.equal(response.config.csonField, 'CsonValue');
-        done();
-      });
-    });
+test(moduleName + 'should return plugin name', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 50,
+    parser: 'RAW',
+    object: {
+      test: 'test.ObjectValue',
+      testNumber: 5,
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test2: 'object.test2.ObjectValue',
+      },
+      array: [5, 6, 7],
+    },
+  }).then(function onSuccess(result) {
+    assert.equal(result.plugin, pluginName);
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
   });
 });
+
+test(moduleName + 'should load root nodes', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 50,
+    parser: 'RAW',
+    object: {
+      test: 'test.ObjectValue',
+      testNumber: 5,
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test2: 'object.test2.ObjectValue',
+      },
+      array: [5, 6, 7],
+    },
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.test, 'test.ObjectValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load numbers', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 50,
+    parser: 'RAW',
+    object: {
+      test: 'test.ObjectValue',
+      testNumber: 5,
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test2: 'object.test2.ObjectValue',
+      },
+      array: [5, 6, 7],
+    },
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.testNumber, 5);
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load objects', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 50,
+    parser: 'RAW',
+    object: {
+      test: 'test.ObjectValue',
+      testNumber: 5,
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test2: 'object.test2.ObjectValue',
+      },
+      array: [5, 6, 7],
+    },
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.object.test1, 'object.test1.ObjectValue');
+    assert.equal(result.config.object.test2, 'object.test2.ObjectValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load array', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 50,
+    parser: 'RAW',
+    object: {
+      test: 'test.ObjectValue',
+      testNumber: 5,
+      object: {
+        test1: 'object.test1.ObjectValue',
+        test2: 'object.test2.ObjectValue',
+      },
+      array: [5, 6, 7],
+    },
+  }).then(function onSuccess(result) {
+    assert.deepEqual(result.config.array, [5, 6, 7]);
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+var resourceDirectoryName = __dirname + '/../../resources/assets/';
+test(moduleName + 'should load JSON', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'JSON',
+    object: fs.readFileSync(resourceDirectoryName + 'config.json'),
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.jsonField, 'JsonValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load XML', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'XML',
+    object: fs.readFileSync(resourceDirectoryName + 'config.xml'),
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.xmlField, 'XMLValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load Properties', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'Properties',
+    object: fs.readFileSync(resourceDirectoryName + 'config.properties'),
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.propertiesField, 'PropertiesValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load YAML', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'YAML',
+    object: fs.readFileSync(resourceDirectoryName + 'config.yaml'),
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.yamlField, 'YamlValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should load CSON', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'CSON',
+    object: fs.readFileSync(resourceDirectoryName + 'config.cson'),
+  }).then(function onSuccess(result) {
+    assert.equal(result.config.csonField, 'CsonValue');
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+function callPlugin(sources) {
+  return plugin.load({
+    plugins: [csonParser, yamlParser, xmlParser, propertiesParser, jsonParser],
+    source: sources,
+  });
+}

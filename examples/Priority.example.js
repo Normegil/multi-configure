@@ -33,12 +33,13 @@ config(
         priority: 2,
       },
     ],
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
     var config = {
       test: 2,
       nullField: null, // Undefined is never taken, but null is
       noPriorityField: true, // Not overriten so loaded from first source
     };
+  }).catch(function onError(err) {
+
   });

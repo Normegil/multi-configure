@@ -26,8 +26,7 @@ config(
         },
       },
     },
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
     // TEST=test ; OBJECT_OTHER_OBJECT_TEST=xTest
     myConfig = {
@@ -36,4 +35,6 @@ config(
         test: 'xTest',
       },
     };
+  }).catch(function onError(err) {
+
   });

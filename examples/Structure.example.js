@@ -31,8 +31,7 @@ config(
         defaultValue: [1, 2, 3],
       },
     },
-  },
-  function callback(err, myConfig) {
+  }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
     myConfig = {
       test: 'test',
@@ -43,4 +42,6 @@ config(
       },
       array: [1, 2, 3],
     };
+  }).catch(function onError(err) {
+
   });

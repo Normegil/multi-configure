@@ -36,6 +36,7 @@ test(moduleName + 'should return plugin name', function(assert) {
       assert.end();
     }).catch(function onError(err) {
       assert.fail(err);
+      assert.end();
     });
 });
 
@@ -46,6 +47,33 @@ test(moduleName + 'should load from path given', function(assert) {
       assert.end();
     }).catch(function onError(err) {
       assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should return empty config if file doesn\'t exist', function(assert) {
+  plugin.load({
+    source: {
+      type: pluginName,
+      priority: 50,
+      path: __dirname + 'noFound',
+    },
+  }).then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should return exception if error is not ENOENT', function(assert) {
+  plugin.load()
+    .then(function onSuccess() {
+      assert.fail(new Error('Should have send an error'));
+      assert.end();
+    }).catch(function onError() {
+      assert.end();
     });
 });
 

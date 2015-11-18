@@ -59,6 +59,7 @@ test(moduleName + '.' + functionName + '() ' + 'load and use custom parser plugi
         type: 'Object',
         parser: 'MyParser',
         priority: 0,
+        object: 'FakeContent',
       },
     ],
   }).then(function testResult(result) {

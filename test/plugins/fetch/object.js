@@ -217,6 +217,51 @@ test(moduleName + 'should load CSON', function(assert) {
   });
 });
 
+test(moduleName + 'should return empty object if object is undefined', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'CSON',
+    object: undefined,
+  }).then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should return empty object if object is null', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'CSON',
+    object: null,
+  }).then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
+test(moduleName + 'should return empty object if object is empty', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    parser: 'CSON',
+    object: '',
+  }).then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
 function callPlugin(sources) {
   return plugin.load({
     plugins: [csonParser, yamlParser, xmlParser, propertiesParser, jsonParser],

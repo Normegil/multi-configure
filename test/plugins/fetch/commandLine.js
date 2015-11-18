@@ -43,6 +43,17 @@ test(moduleName + 'should return plugin name', function(assert) {
     });
 });
 
+test(moduleName + 'should return empty object if command line option doesn\'t exist', function(assert) {
+  callPlugin()
+    .then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
 test(moduleName + 'should return a config with value from command line', function(assert) {
   let originalArgv = process.argv;
   process.argv = [

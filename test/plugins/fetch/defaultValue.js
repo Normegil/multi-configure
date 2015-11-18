@@ -100,6 +100,17 @@ test(moduleName + 'should load array', function(assert) {
     });
 });
 
+test(moduleName + 'should return empty object if no default value found', function(assert) {
+  callPlugin({test: {}})
+    .then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
 function callPlugin(structure) {
   return new Promise(function(resolve, reject) {
     plugin.load({

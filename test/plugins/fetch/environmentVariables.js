@@ -97,6 +97,26 @@ test(moduleName + 'should load array', function(assert) {
     });
 });
 
+test(moduleName + 'should return empty object if no environment variable found', function(assert) {
+  plugin.load({
+    structure: {
+      test: {
+        envVar: 'TEST_ENV_VAR',
+      },
+    },
+    sources: {
+      type: pluginName,
+      priority: 0,
+    },
+  }).then(function onSuccess(result) {
+      assert.deepEqual(result.config, {});
+      assert.end();
+    }).catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
 function callPlugin(structure) {
   process.env.CONFIG_MANAGER_TEST_TEST = 'test.EnvVar';
   process.env.CONFIG_MANAGER_TEST_TEST_NUMBER = '2';

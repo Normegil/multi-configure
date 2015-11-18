@@ -189,6 +189,29 @@ test(moduleName + 'should load CSON file', function(assert) {
   });
 });
 
+test(moduleName + 'should return empty object if no file found', function(assert) {
+  callPlugin({
+    type: pluginName,
+    priority: 0,
+    path: resourceFolder + 'notExisting.notFound',
+  }).then(function onSuccess(result) {
+    assert.deepEqual(result.config, {});
+    assert.end();
+  }).catch(function onError(err) {
+    assert.fail(err);
+    assert.end();
+  });
+});
+
+test(moduleName + 'should return exception if error is not ENOENT', function(assert) {
+  callPlugin({}).then(function onSuccess() {
+    assert.fail(new Error('Should send an error'));
+    assert.end();
+  }).catch(function onError() {
+    assert.end();
+  });
+});
+
 function callPlugin(sources) {
   return plugin.load({
     plugins: [csonParser, yamlParser, xmlParser, propertiesParser, jsonParser],

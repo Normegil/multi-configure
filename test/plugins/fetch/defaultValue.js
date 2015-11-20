@@ -111,6 +111,28 @@ test(moduleName + 'should return empty object if no default value found', functi
     });
 });
 
+test(moduleName + 'should return value of deeply nested structure', function(assert) {
+  callPlugin({
+    test: {
+      test1: {
+        test2: {
+          test3: {
+            defaultValue: 'testValue',
+          },
+        },
+      },
+    },
+  })
+    .then(function onSuccess(result) {
+      assert.equal(result.config.test.test1.test2.test3, 'testValue');
+      assert.end();
+    })
+    .catch(function onError(err) {
+      assert.fail(err);
+      assert.end();
+    });
+});
+
 function callPlugin(structure) {
   return new Promise(function(resolve, reject) {
     plugin.load({

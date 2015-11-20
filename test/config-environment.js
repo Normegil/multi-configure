@@ -9,16 +9,16 @@ let functionName = 'config';
 test(moduleName + '.' + functionName + '() ' + 'use environment settings', function(assert) {
   process.env.NODE_ENV = 'BLABLA';
   config({
-    structure: {
-      test: {
-        defaultValue: 'DefaultTest',
-      },
-    },
     sources: [
       {
         type: 'DefaultValues',
         priority: 10,
         environment: 'PRODUCTION',
+        structure: {
+          test: {
+            defaultValue: 'DefaultTest',
+          },
+        },
       },
       {
         type: 'Object',
@@ -45,11 +45,6 @@ test(moduleName + '.' + functionName + '() ' + 'use environment settings', funct
 test(moduleName + '.' + functionName + '() ' + 'ignore environment settings if none specified', function(assert) {
   process.env.NODE_ENV = 'BLABLA';
   config({
-    structure: {
-      test: {
-        defaultValue: 'DefaultTest',
-      },
-    },
     sources: [
       {
         type: 'Object',

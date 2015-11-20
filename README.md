@@ -55,6 +55,22 @@ config(
       {
         type: 'DefaultValues',
         priority: 0,
+        structure: {
+          test: {
+            defaultValue: 'test',
+          },
+          object: {
+            test1: {
+              defaultValue: 'object.test1',
+            },
+            test2: {
+              defaultValue: 'object.test2',
+            },
+          },
+          array: {
+            defaultValue: [1, 2, 3],
+          },
+        },
       },
       {
         type: 'package.json',
@@ -82,40 +98,50 @@ config(
       {
         type: 'EnvironmentVariables',
         priority: 40,
+        structure: {
+          envVarPrefix: 'TEST_STRUCTURE_',
+          test: {
+            envVar: 'TEST',
+          },
+          object: {
+            envVarPrefix: 'OBJECT_',
+            test1: {
+              envVar: 'OBJECT_TEST1',
+            },
+            test2: {
+              envVar: 'TEST2',
+            },
+          },
+          array: {
+            envVar: 'ARRAY',
+            isArray: true,
+          },
+        },
       },
       {
         type: 'Command Line',
         priority: 100,
+        structure: {
+          envVarPrefix: 'TEST_STRUCTURE_',
+          test: {
+            cmdOpts: ['t', 'test'],
+          },
+          object: {
+            envVarPrefix: 'OBJECT_',
+            test1: {
+              cmdOpts: 'object-test1',
+            },
+            test2: {
+              cmdOpts: 'object-test2',
+            },
+          },
+          array: {
+            cmdOpts: 'array',
+            isArray: true,
+          },
+        },
       },
     ],
-    // Configuration data & structure
-    structure: {
-      envVarPrefix: 'TEST_STRUCTURE_',
-      test: {
-        defaultValue: 'test',
-        envVar: 'TEST',
-        cmdOpts: ['t', 'test'],
-      },
-      object: {
-        envVarPrefix: 'OBJECT_',
-        test1: {
-          defaultValue: 'object.test1',
-          envVar: 'OBJECT_TEST1',
-          cmdOpts: 'object-test1',
-        },
-        test2: {
-          defaultValue: 'object.test2',
-          envVar: 'TEST2',
-          cmdOpts: 'object-test2',
-        },
-      },
-      array: {
-        defaultValue: [1, 2, 3],
-        envVar: 'ARRAY',
-        cmdOpts: 'array',
-        isArray: true,
-      },
-    },
   }).then(function onSuccess(myConfig) {
     /** My Config contains your merged object config. Something like:
      * {
@@ -141,9 +167,8 @@ Everything is specified in an object, with the following fields:
 - `priority` Optional. Define priority to order the sources. The higher the number, the more prioritized a source is. Source without this fields will have the lowest priority (0).
 - `discriminator`: Optional. If present, it will define the name of the object acting as container for the source's configuration. You will access your configuration through `response.config.<discriminator>.blabla` instead of `response.config.blabla`. Done prior to merging, usefull to keep types of configuration (DB, Logging, ...) without property override.
 - `environment`: Optional. If not present, source will be used even if *NODE_ENV* is set. If the property exist, it will be loaded only if `environment` values exactly equals *NODE_ENV* value, or if *NODE_ENV* doesn't exist.
+- `structure`: Optional/Mandatory (Some  plugins use and require it, some don't). Define your configuration structure & settings. You can create a tree of values, which define what your final configuration will look like. Each leaves is an object containing properties used by plugins (Like `defaultValue` or `envVar`).
 - Custom fields: Some plugins will require other fields that could be precised here (Like a `path` for the *File* plugin).
-
-`structure`: Optional/Mandatory (Some  plugins use and require it, some don't). Define your configuration structure & settings. You can create a tree of values, which define what your final configuration will look like. Each leaves is an object containing properties used by plugins (Like `defaultValue` or `envVar`).
 
 As return, you get a Promise.
 
@@ -151,7 +176,7 @@ As return, you get a Promise.
 See [Plugins](https://github.com/Normegil/multi-configure/wiki/Plugins)
 
 ### Defining a structure
-If a structure is defined, all the plugins that uses it will send back an object that looks like this structure. (But, for example, the *File* and *Object* don't use the structure at all). You need to define a hierarchy  of objects to represent your configuration. Once you have your hierarchy, check the [documentation of the plugins](https://github.com/Normegil/multi-configure/wiki/Plugins) you want to use to know how to define the properties of your structure.
+If a structure is defined, the plugin will send back an object that looks like this structure. (But, for example, the *File* and *Object* don't use the structure at all). You need to define a hierarchy  of objects to represent your configuration. Once you have your hierarchy, check the [documentation of the plugins](https://github.com/Normegil/multi-configure/wiki/Plugins) you want to use to know how to define the properties of your structure.
 
 ### Merging and prioritize mecanism
 The merging operation happens when all the sources are parsed and the configurations are loaded. Using `priority` fields from the sources, the merge process will get the value from the most prioritized sources (Higher number) and if the value is *undefined* (*null* values will be kept), it will got to the next source by order of priority. Once all values are filled or all configuration are used, the library will send back the object built.

@@ -9,29 +9,28 @@ config(
     sources: [
       {
         type: 'Command Line',
+        structure: {
+          test: {
+            cmdOpts: 't', // A cmdOpts define what will be used as on option
+          },
+          testBoolean: {
+            cmdOpts: 'x', // Either true or undefined
+          },
+          object: {
+            test1: {
+              cmdOpts: 'object-test1',
+            },
+            test2: {
+              cmdOpts: 'object-test2',
+            },
+          },
+          array: {
+            cmdOpts: ['array', 'a'], // If multiple options can be used for one config value, precise them in an array
+            isArray: true,  // Define if the config value can potentially be an array
+          },
+        },
       },
     ],
-    // Configuration data & structure
-    structure: {
-      test: {
-        cmdOpts: 't', // A cmdOpts define what will be used as on option
-      },
-      testBoolean: {
-        cmdOpts: 'x', // Either true or undefined
-      },
-      object: {
-        test1: {
-          cmdOpts: 'object-test1',
-        },
-        test2: {
-          cmdOpts: 'object-test2',
-        },
-      },
-      array: {
-        cmdOpts: ['array', 'a'], // If multiple options can be used for one config value, precise them in an array
-        isArray: true,  // Define if the config value can potentially be an array
-      },
-    },
   }).then(function onSuccess(myConfig) {
     // My Config contains your merged object config. Something like:
 

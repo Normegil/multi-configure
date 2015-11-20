@@ -14,7 +14,6 @@ module.exports = function config(options) {
       .then(function config(plugins) {
         return getConfiguration({
             plugins: plugins,
-            structure: options.structure,
             sources: options.sources,
           });
       }).then(resolve).catch(reject);
@@ -30,7 +29,7 @@ function getConfiguration(options) {
     let toProcess = filterByEnvironment(options.sources);
 
     let promises = toProcess.map(function toPromise(source) {
-      return loadConfig(options.plugins, source, options.structure);
+      return loadConfig(options.plugins, source);
     });
 
     Promise.all(promises)
@@ -42,13 +41,12 @@ function getConfiguration(options) {
   });
 }
 
-function loadConfig(plugins, source, structure) {
+function loadConfig(plugins, source) {
   return new Promise(function loadConfig(resolve, reject) {
     let plugin = plugins.find(function getPlugin(plugin) {
       return source.type === plugin.name;
     });
     plugin.load({
-      structure: structure,
       plugins: plugins,
       source: source,
     }).then(function onLoaded(result) {

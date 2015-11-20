@@ -99,14 +99,14 @@ test(moduleName + 'should load array', function(assert) {
 
 test(moduleName + 'should return empty object if no environment variable found', function(assert) {
   plugin.load({
-    structure: {
-      test: {
-        envVar: 'TEST_ENV_VAR',
-      },
-    },
-    sources: {
+    source: {
       type: pluginName,
       priority: 0,
+      structure: {
+        test: {
+          envVar: 'TEST_ENV_VAR',
+        },
+      },
     },
   }).then(function onSuccess(result) {
       assert.deepEqual(result.config, {});
@@ -126,10 +126,10 @@ function callPlugin(structure) {
 
   return new Promise(function(resolve, reject) {
     plugin.load({
-      structure: structure,
-      sources: {
+      source: {
         type: pluginName,
         priority: 0,
+        structure: structure,
       },
     }).then(function onSuccess(result) {
       delete process.env.CONFIG_MANAGER_TEST_TEST;

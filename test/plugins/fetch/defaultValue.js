@@ -136,10 +136,10 @@ test(moduleName + 'should return value of deeply nested structure', function(ass
 function callPlugin(structure) {
   return new Promise(function(resolve, reject) {
     plugin.load({
-      structure: structure,
-      sources: {
+      source: {
         type: pluginName,
         priority: 0,
+        structure: structure,
       },
     }).then(resolve).catch(reject);
   });

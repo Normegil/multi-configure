@@ -14,15 +14,15 @@ test(moduleName + '.' + functionName + '() ' + 'should be a function', function(
 test(moduleName + '.' + functionName + '() ' + 'return all default config values', function(assert) {
   config(
     {
-      structure: {
-        test: {
-          defaultValue: 'DefaultTest',
-        },
-      },
       sources: [
         {
           type: 'DefaultValues',
           priority: 5,
+          structure: {
+            test: {
+              defaultValue: 'DefaultTest',
+            },
+          },
         },
       ],
     }).then(function testResult(result) {
@@ -49,11 +49,6 @@ test(moduleName + '.' + functionName + '() ' + 'load and use custom parser plugi
         },
       },
     ],
-    structure: {
-      test: {
-        defaultValue: 'DefaultTest',
-      },
-    },
     sources: [
       {
         type: 'Object',
@@ -74,21 +69,26 @@ test(moduleName + '.' + functionName + '() ' + 'load and use custom parser plugi
 test(moduleName + '.' + functionName + '() ' + 'use discriminator if precised', function(assert) {
   config(
     {
-      structure: {
-        test: {
-          defaultValue: 'DefaultTest',
-        },
-      },
       sources: [
         {
           type: 'DefaultValues',
           priority: 5,
           discriminator: 'discriminator',
+          structure: {
+            test: {
+              defaultValue: 'DefaultTest',
+            },
+          },
         },
         {
           type: 'DefaultValues',
           priority: 5,
           discriminator: 'otherDiscriminator',
+          structure: {
+            test: {
+              defaultValue: 'DefaultTest',
+            },
+          },
         },
       ],
     }).then(function testResult(result) {

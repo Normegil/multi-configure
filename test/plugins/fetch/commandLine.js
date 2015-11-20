@@ -120,10 +120,10 @@ function callPlugin() {
       },
     };
     plugin.load({
-      structure: structure,
-      sources: {
+      source: {
         type: pluginName,
         priority: 0,
+        structure: structure,
       },
     }).then(function onSuccess(result) {
       if (h.exist(result.config.array) && Array.isArray(result.config.array)) {

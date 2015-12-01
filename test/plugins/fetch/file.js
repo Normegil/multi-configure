@@ -9,6 +9,7 @@ var xmlParser = require('./' + relativePathToParsers + 'xml');
 var propertiesParser = require('./' + relativePathToParsers + 'properties');
 var yamlParser = require('./' + relativePathToParsers + 'yaml');
 var csonParser = require('./' + relativePathToParsers + 'cson');
+let log = require('log-wrapper')(undefined);
 
 var pluginName = 'File';
 var moduleName = 'Plugin: ' + pluginName + ' ';
@@ -32,7 +33,7 @@ test(moduleName + 'should return plugin name', function(assert) {
     assert.equal(pluginName, result.plugin);
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -45,7 +46,7 @@ test(moduleName + 'should load root nodes', function(assert) {
     assert.equal(result.config.test, 'Test');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -58,7 +59,7 @@ test(moduleName + 'should load numbers', function(assert) {
     assert.equal(result.config.testNumber, 2);
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -72,7 +73,7 @@ test(moduleName + 'should load objects', function(assert) {
     assert.equal(result.config.object.test2, 'object.test2.value');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -85,7 +86,7 @@ test(moduleName + 'should load array', function(assert) {
     assert.deepEqual(result.config.array, [3,4,5]);
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -109,7 +110,7 @@ test(moduleName + 'should load Json file', function(assert) {
     assert.equal(result.config.jsonField, 'JsonValue');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -134,7 +135,7 @@ test(moduleName + 'should load XML file', function(assert) {
     assert.equal(result.config.xmlField, 'XMLValue');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -159,7 +160,7 @@ test(moduleName + 'should load Properties file', function(assert) {
     assert.equal(result.config.propertiesField, 'PropertiesValue');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -172,7 +173,7 @@ test(moduleName + 'should load YAML file', function(assert) {
     assert.equal(result.config.yamlField, 'YamlValue');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -185,7 +186,7 @@ test(moduleName + 'should load CSON file', function(assert) {
     assert.equal(result.config.csonField, 'CsonValue');
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
+    assert.end(err);
   });
 });
 
@@ -198,8 +199,7 @@ test(moduleName + 'should return empty object if no file found', function(assert
     assert.deepEqual(result.config, {});
     assert.end();
   }).catch(function onError(err) {
-    assert.fail(err);
-    assert.end();
+    assert.end(err);
   });
 });
 
@@ -216,5 +216,5 @@ function callPlugin(sources) {
   return plugin.load({
     plugins: [csonParser, yamlParser, xmlParser, propertiesParser, jsonParser],
     source: sources,
-  });
+  }, log);
 }

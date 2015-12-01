@@ -2,6 +2,7 @@
 
 var test = require('tape');
 var plugin = require('../../../lib/plugins/fetch/environmentVariables');
+let log = require('log-wrapper')(undefined);
 
 var pluginName = 'EnvironmentVariables';
 var moduleName = 'Plugin: ' + pluginName + ' ';
@@ -43,8 +44,7 @@ test(moduleName + 'should return plugin name', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -55,8 +55,7 @@ test(moduleName + 'should load root nodes', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -67,8 +66,7 @@ test(moduleName + 'should load numbers', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -80,8 +78,7 @@ test(moduleName + 'should load objects', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -92,8 +89,7 @@ test(moduleName + 'should load array', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -108,12 +104,11 @@ test(moduleName + 'should return empty object if no environment variable found',
         },
       },
     },
-  }).then(function onSuccess(result) {
+  }, log).then(function onSuccess(result) {
       assert.deepEqual(result.config, {});
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -131,7 +126,7 @@ function callPlugin(structure) {
         priority: 0,
         structure: structure,
       },
-    }).then(function onSuccess(result) {
+    }, log).then(function onSuccess(result) {
       delete process.env.CONFIG_MANAGER_TEST_TEST;
       delete process.env.CONFIG_MANAGER_TEST_TEST_NUMBER;
       delete process.env.CONFIG_MANAGER_TEST_OBJECT_TEST1;

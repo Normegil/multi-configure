@@ -39,10 +39,11 @@
     "cson": "^3.0.2",
     "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
+    "log-wrapper": "^0.1.1",
     "minimist": "^1.2.0",
     "node-uuid": "^1.4.3",
-    "path-explorer": "^0.2.1",
-    "plugin-system": "^0.2.0",
+    "path-explorer": "^0.2.2",
+    "plugin-system": "^0.2.1",
     "properties-parser": "^0.3.0",
     "xml2js": "^0.4.12"
   }

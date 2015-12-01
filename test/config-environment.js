@@ -37,8 +37,7 @@ test(moduleName + '.' + functionName + '() ' + 'use environment settings', funct
     assert.end();
   }).catch(function onError(err) {
     delete process.env.NODE_ENV;
-    assert.fail(err);
-    assert.end();
+    assert.end(err);
   });
 });
 
@@ -61,7 +60,6 @@ test(moduleName + '.' + functionName + '() ' + 'ignore environment settings if n
     assert.end();
   }).catch(function onError(err) {
     delete process.env.NODE_ENV;
-    assert.fail(err);
-    assert.end();
+    assert.end(err);
   });
 });

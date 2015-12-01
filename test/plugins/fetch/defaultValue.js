@@ -3,6 +3,7 @@
 var test = require('tape');
 var pathToLib = '../../../lib/';
 var plugin = require(pathToLib + 'plugins/fetch/defaultValue');
+let log = require('log-wrapper')(undefined);
 
 var pluginName = 'DefaultValues';
 var moduleName = 'Plugin: ' + pluginName + ' ';
@@ -46,8 +47,7 @@ test(moduleName + 'should return plugin name', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -58,8 +58,7 @@ test(moduleName + 'should load root nodes', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -70,8 +69,7 @@ test(moduleName + 'should return numbers', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -83,8 +81,7 @@ test(moduleName + 'should load objects', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -95,8 +92,7 @@ test(moduleName + 'should load array', function(assert) {
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -106,8 +102,7 @@ test(moduleName + 'should return empty object if no default value found', functi
       assert.deepEqual(result.config, {});
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -128,8 +123,7 @@ test(moduleName + 'should return value of deeply nested structure', function(ass
       assert.end();
     })
     .catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -141,6 +135,6 @@ function callPlugin(structure) {
         priority: 0,
         structure: structure,
       },
-    }).then(resolve).catch(reject);
+    }, log).then(resolve).catch(reject);
   });
 }

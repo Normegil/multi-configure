@@ -1,12 +1,13 @@
 'use strict';
 
-var relativePathToPlugins = '../../../lib/plugins/';
+let relativePathToPlugins = '../../../lib/plugins/';
 
-var test = require('tape');
-var plugin = require('./' + relativePathToPlugins + 'fetch/packageJson');
+let test = require('tape');
+let plugin = require('./' + relativePathToPlugins + 'fetch/packageJson');
+let log = require('log-wrapper')(undefined);
 
-var pluginName = 'package.json';
-var moduleName = 'Plugin: ' + pluginName + ' ';
+let pluginName = 'package.json';
+let moduleName = 'Plugin: ' + pluginName + ' ';
 test(moduleName + 'should be named \'' + pluginName + '\'', function(assert) {
   assert.equal(pluginName, plugin.name);
   assert.end();
@@ -17,7 +18,7 @@ test(moduleName + 'should be a \'fetch\' type plugin', function(assert) {
   assert.end();
 });
 
-var expected = {
+let expected = {
   jsonField: 'JsonValue',
   test: 'Test',
   testNumber: 2,
@@ -35,8 +36,7 @@ test(moduleName + 'should return plugin name', function(assert) {
       assert.equal(result.plugin, pluginName);
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -46,8 +46,7 @@ test(moduleName + 'should load from path given', function(assert) {
       assert.deepEqual(result.config, expected);
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -58,12 +57,11 @@ test(moduleName + 'should return empty config if file doesn\'t exist', function(
       priority: 50,
       path: __dirname + 'noFound',
     },
-  }).then(function onSuccess(result) {
+  }, log).then(function onSuccess(result) {
       assert.deepEqual(result.config, {});
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -85,6 +83,6 @@ function callPlugin() {
         priority: 50,
         path: __dirname + '/../../resources/assets/package.json',
       },
-    }).then(resolve).catch(reject);
+    }, log).then(resolve).catch(reject);
   });
 }

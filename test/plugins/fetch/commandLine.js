@@ -5,6 +5,7 @@ let _ = require('lodash');
 let pathToLib = '../../../lib/';
 let h = require(pathToLib + 'helper');
 let plugin = require(pathToLib + 'plugins/fetch/commandLine');
+let log = require('log-wrapper')(undefined);
 
 let pluginName = 'Command Line';
 let moduleName = 'Plugin: ' + pluginName + ' ';
@@ -38,8 +39,7 @@ test(moduleName + 'should return plugin name', function(assert) {
       assert.equal(result.plugin, pluginName);
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -49,8 +49,7 @@ test(moduleName + 'should return empty object if command line option doesn\'t ex
       assert.deepEqual(result.config, {});
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -75,9 +74,8 @@ test(moduleName + 'should return a config with value from command line', functio
       process.argv = originalArgv;
       assert.end();
     }).catch(function onError(err) {
-      assert.fail(err);
       process.argv = originalArgv;
-      assert.end();
+      assert.end(err);
     });
 });
 
@@ -125,7 +123,7 @@ function callPlugin() {
         priority: 0,
         structure: structure,
       },
-    }).then(function onSuccess(result) {
+    }, log).then(function onSuccess(result) {
       if (h.exist(result.config.array) && Array.isArray(result.config.array)) {
         result.config.array = _.sortBy(result.config.array, function(value) {
           return value;
